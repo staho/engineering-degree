@@ -10,10 +10,11 @@
  *
  * @flow
  */
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
+import { CATCH_ON_MAIN } from './constants/constants';
 
 export default class AppUpdater {
   constructor() {
@@ -91,6 +92,10 @@ app.on('ready', async () => {
 
   mainWindow.on('closed', () => {
     mainWindow = null;
+  });
+
+  ipcMain.on(CATCH_ON_MAIN, (event, arg) => {
+    console.log('Dupa', arg);
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
