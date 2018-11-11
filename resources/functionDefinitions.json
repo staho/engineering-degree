@@ -1,0 +1,38 @@
+{
+  "functions": [
+    {
+      "name": "Abecadlo",
+      "variables": [
+        {
+          "name": "A",
+          "desc": "Zmienna A przechowuje wartość parametru A"
+        },
+        {
+          "name": "B",
+          "desc": "Zmienna B przechowuje wartość parametru B"
+        },
+        {
+          "name": "C",
+          "desc": "Zmienna C przechowuje wartość parametru C"
+        }
+      ]
+    },
+    {
+      "name": "XYZcadlo",
+      "variables": [
+        {
+          "name": "X",
+          "desc": "Zmienna X przechowuje wartość parametru X"
+        },
+        {
+          "name": "Y",
+          "desc": "Zmienna Y przechowuje wartość parametru Y"
+        },
+        {
+          "name": "Z",
+          "desc": "Zmienna Z przechowuje wartość parametru Z"
+        }
+      ]
+    }
+  ]
+}

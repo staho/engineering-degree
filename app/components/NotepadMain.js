@@ -3,12 +3,10 @@ import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import TextField from '@material-ui/core/TextField';
-// import Paper from '@material-ui/core/Paper';
-// import Input from '@material-ui/core/Input';
-// import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles';
-// import Typography from '@material-ui/core/Typography';
+import { ipcRenderer } from 'electron';
 import FunctionDescriptor from './NotepadComponents/FunctionDescriptor';
+import { FUNCTIONS_DEF_LOAD } from '../constants/constants';
 
 const drawerWidth = 400;
 
@@ -49,7 +47,16 @@ class NotepadMain extends Component<Props> {
     this.state = {
       functions: []
     };
+
+    ipcRenderer.on(FUNCTIONS_DEF_LOAD, (event, data) => {
+      const parsedFunDefs = JSON.parse(data);
+
+      this.setState({ functionsDef: parsedFunDefs });
+      console.log(parsedFunDefs);
+    });
   }
+
+  findFun = funBegin => element => element.name.startsWith(funBegin);
 
   // todo: delagate it to redux state
   processChange = event => {
@@ -63,7 +70,14 @@ class NotepadMain extends Component<Props> {
     let currentLineStart = 0;
 
     splittedString.forEach(line => {
-      if (line.startsWith('*') && true) {
+      const functionText = line.replace('*', '');
+
+      const funSearch = this.findFun(functionText);
+
+      if (
+        line.startsWith('*') &&
+        this.state.functionsDef.functions.find(funSearch)
+      ) {
         // this "true" should be replaced with condition functionBase.contains(line)
         const lineEnd = currentLineStart + line.length;
         let focused = false;
