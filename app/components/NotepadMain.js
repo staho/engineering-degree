@@ -56,7 +56,8 @@ class NotepadMain extends Component<Props> {
     });
   }
 
-  findFun = funBegin => element => element.name.startsWith(funBegin);
+  findFun = funBegin => element =>
+    element.name.toUpperCase() === funBegin.toUpperCase();
 
   // todo: delagate it to redux state
   processChange = event => {
@@ -70,28 +71,32 @@ class NotepadMain extends Component<Props> {
     let currentLineStart = 0;
 
     splittedString.forEach(line => {
-      const functionText = line.replace('*', '');
+      if (line.startsWith('*')) {
+        const functionText = line.replace('*', '');
 
-      const funSearch = this.findFun(functionText);
+        const funSearch = this.findFun(functionText);
+        const foundDefinition = this.state.functionsDef.functions.find(
+          funSearch
+        );
 
-      if (
-        line.startsWith('*') &&
-        this.state.functionsDef.functions.find(funSearch)
-      ) {
-        // this "true" should be replaced with condition functionBase.contains(line)
-        const lineEnd = currentLineStart + line.length;
-        let focused = false;
-        if (caret >= currentLineStart && caret <= lineEnd) {
-          focused = true;
+        if (line.length > 1 && foundDefinition) {
+          // this "true" should be replaced with condition functionBase.contains(line)
+          const lineEnd = currentLineStart + line.length;
+          let focused = false;
+          if (caret >= currentLineStart && caret <= lineEnd) {
+            focused = true;
+          }
+
+          newFunctions.push({
+            text: foundDefinition.name,
+            focused,
+            functionStart: currentLineStart,
+            functionEnd: lineEnd,
+            definition: foundDefinition
+          });
         }
-
-        newFunctions.push({
-          text: line.replace('*', ''),
-          focused,
-          functionStart: currentLineStart,
-          functionEnd: lineEnd
-        });
       }
+
       console.log('Caret: ', caret, ' currLineStart: ', currentLineStart);
 
       currentLineStart += line.length + 1; // +1 is a \n
@@ -114,7 +119,7 @@ class NotepadMain extends Component<Props> {
           key={`function-descriptor-${(descIndex += 1)}`}
           text={fun.text}
           focused={fun.focused}
-          description="blah"
+          definition={fun.definition}
         />
       ));
     }
