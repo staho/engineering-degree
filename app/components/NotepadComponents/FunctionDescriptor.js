@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
 
 const styles = theme => ({
   root: {
@@ -31,18 +32,26 @@ class FunctionDescriptor extends React.Component {
     const { focused } = this.props;
     const { definition } = this.props;
 
-    const variables = definition.variables.map(variable => (
-      <ListItem>
-        <ListItemText disableTypography>
-          <Typography gutterBottom>
-            <Typography variant="subtitle2" gutterBottom>{`Zmienna: ${
-              variable.name
-            }`}</Typography>
-            {`${variable.desc}`}
-          </Typography>
-        </ListItemText>
-      </ListItem>
-    ));
+    let enumerate = 0;
+
+    const variables = [];
+    definition.variables.forEach(arrOfVariables => {
+      arrOfVariables.forEach(variable =>
+        variables.push(
+          <ListItem key={(enumerate += 1)}>
+            <ListItemText disableTypography>
+              <Typography gutterBottom>
+                <Typography variant="subtitle2" gutterBottom>{`Zmienna: ${
+                  variable.name
+                }`}</Typography>
+                {`${variable.desc}`}
+              </Typography>
+            </ListItemText>
+          </ListItem>
+        )
+      );
+      variables.push(<Divider />);
+    });
 
     console.log(variables);
 

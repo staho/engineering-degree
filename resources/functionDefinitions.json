@@ -3,35 +3,53 @@
     {
       "name": "Abecadlo",
       "variables": [
-        {
-          "name": "A",
-          "desc": "Zmienna A przechowuje wartość parametru A"
-        },
-        {
-          "name": "B",
-          "desc": "Zmienna B przechowuje wartość parametru B"
-        },
-        {
-          "name": "C",
-          "desc": "Zmienna C przechowuje wartość parametru C"
-        }
+        [
+          {
+            "name": "A",
+            "desc": "Zmienna A przechowuje wartość parametru A"
+          },
+          {
+            "name": "B",
+            "desc": "Zmienna B przechowuje wartość parametru B"
+          },
+          {
+            "name": "C",
+            "desc": "Zmienna C przechowuje wartość parametru C"
+          }
+        ],
+        [
+          {
+            "name": "I",
+            "desc": "Zmienna K przechowuje wartość parametru K"
+          },
+          {
+            "name": "L",
+            "desc": "Zmienna L przechowuje wartość parametru L"
+          },
+          {
+            "name": "M",
+            "desc": "Zmienna M przechowuje wartość parametru M"
+          }
+        ]
       ]
     },
     {
       "name": "XYZcadlo",
       "variables": [
-        {
-          "name": "X",
-          "desc": "Zmienna X przechowuje wartość parametru X"
-        },
-        {
-          "name": "Y",
-          "desc": "Zmienna Y przechowuje wartość parametru Y"
-        },
-        {
-          "name": "Z",
-          "desc": "Zmienna Z przechowuje wartość parametru Z"
-        }
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
       ]
     }
   ]

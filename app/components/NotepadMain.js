@@ -45,7 +45,8 @@ class NotepadMain extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
-      functions: []
+      functions: [],
+      prevDate: new Date()
     };
 
     ipcRenderer.on(FUNCTIONS_DEF_LOAD, (event, data) => {
@@ -60,18 +61,71 @@ class NotepadMain extends Component<Props> {
     element.name.toUpperCase() === funBegin.toUpperCase();
 
   // todo: delagate it to redux state
+
+  handleClick = event => {
+    const caret = event.target.selectionStart;
+    this.focusFunctionBasedOnCaret(caret);
+  };
+
+  handleKeyUp = event => {
+    if (event.keyCode >= 35 && event.keyCode <= 40) {
+      const caret = event.target.selectionStart;
+      this.focusFunctionBasedOnCaret(caret);
+    }
+  };
+
+  handleKeyDown = event => {
+    if (event.keyCode === 9) event.preventDefault();
+  };
+
+  focusFunctionBasedOnCaret = caret => {
+    const tempFunctions = [...this.state.functions];
+
+    const newFunctions = tempFunctions.map(elem => {
+      const tempElem = { ...elem };
+
+      if (caret >= elem.functionStart && caret <= elem.functionEnd) {
+        tempElem.focused = true;
+      } else {
+        tempElem.focused = false;
+      }
+      return tempElem;
+    });
+
+    this.setState({ functions: newFunctions });
+  };
+
+  preProcessChange = event => {
+    const date = new Date();
+
+    if (this.state.prevDate) {
+      const diff = date.getTime() - this.state.prevDate.getTime();
+      if (diff > 500) {
+        this.processChange(event);
+        this.setState({ prevDate: date });
+      }
+    }
+  };
+
   processChange = event => {
     const currentValue = event.target.value;
     const splittedString = currentValue.split('\n');
     const text = currentValue.replace(/a/g, '');
     const caret =
       event.target.selectionStart - (currentValue.length - text.length);
+
+    console.log(
+      'Selection start:',
+      event.target.selectionStart,
+      ' caret: ',
+      caret
+    );
     const newFunctions = [];
 
     let currentLineStart = 0;
 
     splittedString.forEach(line => {
-      if (line.startsWith('*')) {
+      if (line.startsWith('*') && this.state.functionsDef) {
         const functionText = line.replace('*', '');
 
         const funSearch = this.findFun(functionText);
@@ -104,7 +158,9 @@ class NotepadMain extends Component<Props> {
 
     console.log('-----------------------', newFunctions);
 
-    this.setState({ functions: newFunctions });
+    this.setState({ functions: newFunctions }, () => {
+      console.log(this.state.functions);
+    });
   };
 
   render() {
@@ -114,14 +170,16 @@ class NotepadMain extends Component<Props> {
 
     if (this.state.functions.length > 0) {
       let descIndex = 0;
-      functionDescriptors = this.state.functions.map(fun => (
-        <FunctionDescriptor
-          key={`function-descriptor-${(descIndex += 1)}`}
-          text={fun.text}
-          focused={fun.focused}
-          definition={fun.definition}
-        />
-      ));
+      functionDescriptors = this.state.functions
+        .filter(el => el.focused)
+        .map(fun => (
+          <FunctionDescriptor
+            key={`function-descriptor-${(descIndex += 1)}`}
+            text={fun.text}
+            focused={fun.focused}
+            definition={fun.definition}
+          />
+        ));
     }
 
     return (
@@ -143,9 +201,20 @@ class NotepadMain extends Component<Props> {
           {functionDescriptors}
         </Drawer>
 
-        <main className={classes.content}>
+        <main
+          className={classes.content}
+          style={{ height: 'calc(100vh - 64px' }}
+        >
           <div className={classes.toolbar} />
-          <TextField multiline fullWidth onChange={this.processChange} />
+          <TextField
+            style={{ height: 'calc(100vh - 120px', overflow: 'auto' }}
+            multiline
+            fullWidth
+            onChange={this.preProcessChange}
+            onClick={this.handleClick}
+            onKeyUp={this.handleKeyUp}
+            onKeyDown={this.handleKeyDown}
+          />
         </main>
       </div>
     );
