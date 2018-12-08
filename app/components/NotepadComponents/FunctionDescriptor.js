@@ -31,16 +31,20 @@ class FunctionDescriptor extends React.Component {
     const { text } = this.props;
     const { focused } = this.props;
     const { definition } = this.props;
+    const { focusedVarNo } = this.props;
 
     let enumerate = 0;
 
     const variables = [];
     definition.variables.forEach(arrOfVariables => {
-      arrOfVariables.forEach(variable =>
+      arrOfVariables.forEach(variable => {
         variables.push(
-          <ListItem key={(enumerate += 1)}>
+          <ListItem key={enumerate}>
             <ListItemText disableTypography>
-              <Typography gutterBottom>
+              <Typography
+                gutterBottom
+                color={enumerate === focusedVarNo ? 'error' : 'default'}
+              >
                 <Typography variant="subtitle2" gutterBottom>{`Zmienna: ${
                   variable.name
                 }`}</Typography>
@@ -48,8 +52,9 @@ class FunctionDescriptor extends React.Component {
               </Typography>
             </ListItemText>
           </ListItem>
-        )
-      );
+        );
+        enumerate += 1;
+      });
       variables.push(<Divider />);
     });
 
@@ -79,7 +84,8 @@ FunctionDescriptor.propTypes = {
   text: PropTypes.string.isRequired,
   focused: PropTypes.bool.isRequired,
   definition: PropTypes.object.isRequired,
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  focusedVarNo: PropTypes.number.isRequired
 };
 
 export default withStyles(styles)(FunctionDescriptor);

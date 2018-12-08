@@ -1,14 +1,61 @@
 // @flow
 import { app, Menu, shell, BrowserWindow, dialog } from 'electron';
 import fs from 'fs';
-import { FUNCTIONS_DEF_LOAD } from './constants/constants';
+import { FUNCTIONS_DEF_LOAD, LAST_FILE_NAME } from './constants/constants';
 
 export default class MenuBuilder {
   mainWindow: BrowserWindow;
 
   constructor(mainWindow: BrowserWindow) {
     this.mainWindow = mainWindow;
+    this.appDataPath = `${app.getPath('appData')}/DefemPreprocessor`;
   }
+
+  createAppDataFolder() {
+    if (!fs.existsSync(this.appDataPath)) {
+      fs.mkdirSync(this.appDataPath);
+    }
+  }
+
+  saveDefinitionsFileToAppData(data) {
+    if (!data) return;
+    fs.writeFileSync(`${this.appDataPath}/${LAST_FILE_NAME}`, data);
+  }
+
+  readDefinitionsFromAppData() {
+    let readFile;
+    try {
+      readFile = fs.readFileSync(`${this.appDataPath}/${LAST_FILE_NAME}`);
+    } catch (e) {
+      console.error(e);
+    }
+    if (!readFile) return;
+
+    return JSON.parse(readFile);
+  }
+
+  openDialog = () => {
+    console.log('Hops');
+
+    dialog.showOpenDialog(fileNames => {
+      if (fileNames === undefined) {
+        console.log('No file selected');
+        return;
+      }
+
+      console.log(fileNames);
+
+      fs.readFile(fileNames[0], 'utf-8', (err, data) => {
+        if (err) {
+          console.error('An error occured');
+        }
+
+        this.mainWindow.webContents.send(FUNCTIONS_DEF_LOAD, data);
+        this.saveDefinitionsFileToAppData(data);
+        console.log(`The file content: ${data}`);
+      });
+    });
+  };
 
   buildMenu() {
     if (
@@ -295,26 +342,4 @@ export default class MenuBuilder {
 
     return templateDefault;
   }
-
-  openDialog = () => {
-    console.log('Hops');
-
-    dialog.showOpenDialog(fileNames => {
-      if (fileNames === undefined) {
-        console.log('No file selected');
-        return;
-      }
-
-      console.log(fileNames);
-
-      fs.readFile(fileNames[0], 'utf-8', (err, data) => {
-        if (err) {
-          alert('An error occured');
-        }
-
-        this.mainWindow.webContents.send(FUNCTIONS_DEF_LOAD, data);
-        console.log(`The file content: ${data}`);
-      });
-    });
-  };
 }

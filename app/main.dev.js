@@ -14,7 +14,7 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
-import { CATCH_ON_MAIN } from './constants/constants';
+import { CATCH_ON_MAIN, FUNCTIONS_DEF_LOAD } from './constants/constants';
 
 export default class AppUpdater {
   constructor() {
@@ -25,6 +25,8 @@ export default class AppUpdater {
 }
 
 let mainWindow = null;
+
+let definitionData;
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -95,11 +97,15 @@ app.on('ready', async () => {
   });
 
   ipcMain.on(CATCH_ON_MAIN, (event, arg) => {
-    console.log('Dupa', arg);
+    console.log(definitionData, arg);
+
+    mainWindow.webContents.send(FUNCTIONS_DEF_LOAD, definitionData);
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
+  menuBuilder.createAppDataFolder();
+  definitionData = menuBuilder.readDefinitionsFromAppData();
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line

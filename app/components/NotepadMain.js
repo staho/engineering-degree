@@ -6,7 +6,8 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import { ipcRenderer } from 'electron';
 import FunctionDescriptor from './NotepadComponents/FunctionDescriptor';
-import { FUNCTIONS_DEF_LOAD } from '../constants/constants';
+import { FUNCTIONS_DEF_LOAD, CATCH_ON_MAIN } from '../constants/constants';
+// import { t } from 'testcafe';
 
 const drawerWidth = 400;
 
@@ -39,23 +40,28 @@ const styles = theme => ({
   toolbar: theme.mixins.toolbar
 });
 
+const delimiter = ' ';
+
 class NotepadMain extends Component<Props> {
   props: Props;
 
   constructor(props) {
     super(props);
     this.state = {
-      functions: [],
       prevDate: new Date()
     };
 
     ipcRenderer.on(FUNCTIONS_DEF_LOAD, (event, data) => {
-      const parsedFunDefs = JSON.parse(data);
+      const parsedFunDefs = data;
 
       this.setState({ functionsDef: parsedFunDefs });
       console.log(parsedFunDefs);
     });
   }
+
+  componentDidMount = () => {
+    ipcRenderer.send(CATCH_ON_MAIN, 'ping');
+  };
 
   findFun = funBegin => element =>
     element.name.toUpperCase() === funBegin.toUpperCase();
@@ -63,14 +69,12 @@ class NotepadMain extends Component<Props> {
   // todo: delagate it to redux state
 
   handleClick = event => {
-    const caret = event.target.selectionStart;
-    this.focusFunctionBasedOnCaret(caret);
+    this.focusFunctionBasedOnCaret(event);
   };
 
   handleKeyUp = event => {
     if (event.keyCode >= 35 && event.keyCode <= 40) {
-      const caret = event.target.selectionStart;
-      this.focusFunctionBasedOnCaret(caret);
+      this.focusFunctionBasedOnCaret(event);
     }
   };
 
@@ -78,21 +82,8 @@ class NotepadMain extends Component<Props> {
     if (event.keyCode === 9) event.preventDefault();
   };
 
-  focusFunctionBasedOnCaret = caret => {
-    const tempFunctions = [...this.state.functions];
-
-    const newFunctions = tempFunctions.map(elem => {
-      const tempElem = { ...elem };
-
-      if (caret >= elem.functionStart && caret <= elem.functionEnd) {
-        tempElem.focused = true;
-      } else {
-        tempElem.focused = false;
-      }
-      return tempElem;
-    });
-
-    this.setState({ functions: newFunctions });
+  focusFunctionBasedOnCaret = event => {
+    this.processChange(event);
   };
 
   preProcessChange = event => {
@@ -100,7 +91,7 @@ class NotepadMain extends Component<Props> {
 
     if (this.state.prevDate) {
       const diff = date.getTime() - this.state.prevDate.getTime();
-      if (diff > 500) {
+      if (diff > 250) {
         this.processChange(event);
         this.setState({ prevDate: date });
       }
@@ -109,22 +100,32 @@ class NotepadMain extends Component<Props> {
 
   processChange = event => {
     const currentValue = event.target.value;
-    const splittedString = currentValue.split('\n');
-    const text = currentValue.replace(/a/g, '');
-    const caret =
-      event.target.selectionStart - (currentValue.length - text.length);
 
-    console.log(
-      'Selection start:',
-      event.target.selectionStart,
-      ' caret: ',
-      caret
-    );
-    const newFunctions = [];
+    if (!currentValue) return;
+
+    const splittedString = currentValue.split('\n');
+    // const text = currentValue.replace(/a/g, '');
+    // const caret =
+    //   event.target.selectionStart - (currentValue.length - text.length);
+
+    // console.log(
+    //   'Selection start:',
+    //   event.target.selectionStart,
+    //   ' caret: ',
+    //   caret
+    // );
 
     let currentLineStart = 0;
+    let varCounter = 0;
+    // let varLengthCounter = 0;
+
+    let currentFocused = {};
+    let tempFocused = {};
+    // const funStart = [];
 
     splittedString.forEach(line => {
+      const lineEnd = currentLineStart + line.length;
+
       if (line.startsWith('*') && this.state.functionsDef) {
         const functionText = line.replace('*', '');
 
@@ -134,54 +135,75 @@ class NotepadMain extends Component<Props> {
         );
 
         if (line.length > 1 && foundDefinition) {
-          // this "true" should be replaced with condition functionBase.contains(line)
-          const lineEnd = currentLineStart + line.length;
-          let focused = false;
-          if (caret >= currentLineStart && caret <= lineEnd) {
-            focused = true;
-          }
-
-          newFunctions.push({
+          tempFocused = {
             text: foundDefinition.name,
-            focused,
-            functionStart: currentLineStart,
+            definition: foundDefinition,
+            focusedVarNo: null,
             functionEnd: lineEnd,
-            definition: foundDefinition
-          });
-        }
-      }
+            functionStart: currentLineStart,
+            variables: []
+          };
 
-      console.log('Caret: ', caret, ' currLineStart: ', currentLineStart);
+          if (event.target.selectionStart >= currentLineStart) {
+            // && event.target.selectionStart <= lineEnd
+            currentFocused = tempFocused;
+          }
+        }
+        varCounter = 0;
+      } else {
+        const splittedByDelimiter = line.split(delimiter);
+        let tempLen = currentLineStart;
+
+        splittedByDelimiter.forEach(elem => {
+          varCounter += 1;
+          if (
+            event.target.selectionStart > tempLen &&
+            event.target.selectionStart <= tempLen + elem.length
+          ) {
+            currentFocused.focusedVarNo = varCounter;
+            // console.log('This is var!', elem, varCounter);
+          }
+          tempLen += elem.length + 1; // +1 for delimiter
+        });
+
+        // varLengthCounter += line.length;
+
+        // todo: focus on edited var
+
+        // console.log(
+        //   currentLineStart,
+        //   event.target.selectionStart,
+        //   varCounter,
+        //   tempFocused
+        // );
+      }
 
       currentLineStart += line.length + 1; // +1 is a \n
     });
 
-    console.log('-----------------------', newFunctions);
-
-    this.setState({ functions: newFunctions }, () => {
-      console.log(this.state.functions);
-    });
+    this.setState({ focusedFunction: currentFocused });
   };
 
   render() {
     const { classes } = this.props;
 
-    let functionDescriptors = [];
+    let functionDescriptor = <div />;
 
-    if (this.state.functions.length > 0) {
-      let descIndex = 0;
-      functionDescriptors = this.state.functions
-        .filter(el => el.focused)
-        .map(fun => (
-          <FunctionDescriptor
-            key={`function-descriptor-${(descIndex += 1)}`}
-            text={fun.text}
-            focused={fun.focused}
-            definition={fun.definition}
-          />
-        ));
+    const tempFocusedFunction = { ...this.state.focusedFunction };
+    // console.log(tempFocusedFunction);
+
+    if (tempFocusedFunction.text) {
+      functionDescriptor = (
+        <FunctionDescriptor
+          key="function-descriptor"
+          text={tempFocusedFunction.text}
+          focused // deprecated
+          definition={tempFocusedFunction.definition}
+          focusedVarNo={tempFocusedFunction.focusedVarNo}
+        />
+      );
     }
-
+    // todo: move appbar to component above
     return (
       <div className={classes.root}>
         <AppBar
@@ -198,7 +220,7 @@ class NotepadMain extends Component<Props> {
           }}
         >
           <div className={classes.toolbar} />
-          {functionDescriptors}
+          {functionDescriptor}
         </Drawer>
 
         <main
