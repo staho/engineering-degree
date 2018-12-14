@@ -5,6 +5,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import { ipcRenderer } from 'electron';
+import Typography from '@material-ui/core/Typography';
 import FunctionDescriptor from './NotepadComponents/FunctionDescriptor';
 import { FUNCTIONS_DEF_LOAD, CATCH_ON_MAIN } from '../constants/constants';
 // import { t } from 'testcafe';
@@ -36,6 +37,12 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing.unit * 3,
     minWidth: 0 // So the Typography noWrap works
+  },
+  title: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'block'
+    }
   },
   toolbar: theme.mixins.toolbar
 });
@@ -104,24 +111,12 @@ class NotepadMain extends Component<Props> {
     if (!currentValue) return;
 
     const splittedString = currentValue.split('\n');
-    // const text = currentValue.replace(/a/g, '');
-    // const caret =
-    //   event.target.selectionStart - (currentValue.length - text.length);
-
-    // console.log(
-    //   'Selection start:',
-    //   event.target.selectionStart,
-    //   ' caret: ',
-    //   caret
-    // );
 
     let currentLineStart = 0;
     let varCounter = 0;
-    // let varLengthCounter = 0;
 
     let currentFocused = {};
     let tempFocused = {};
-    // const funStart = [];
 
     splittedString.forEach(line => {
       const lineEnd = currentLineStart + line.length;
@@ -145,13 +140,12 @@ class NotepadMain extends Component<Props> {
           };
 
           if (event.target.selectionStart >= currentLineStart) {
-            // && event.target.selectionStart <= lineEnd
             currentFocused = tempFocused;
           }
         }
         varCounter = 0;
       } else {
-        const splittedByDelimiter = line.split(delimiter);
+        const splittedByDelimiter = line.split(delimiter); // what if someone makes two delimiters in row
         let tempLen = currentLineStart;
 
         splittedByDelimiter.forEach(elem => {
@@ -161,21 +155,9 @@ class NotepadMain extends Component<Props> {
             event.target.selectionStart <= tempLen + elem.length
           ) {
             currentFocused.focusedVarNo = varCounter;
-            // console.log('This is var!', elem, varCounter);
           }
           tempLen += elem.length + 1; // +1 for delimiter
         });
-
-        // varLengthCounter += line.length;
-
-        // todo: focus on edited var
-
-        // console.log(
-        //   currentLineStart,
-        //   event.target.selectionStart,
-        //   varCounter,
-        //   tempFocused
-        // );
       }
 
       currentLineStart += line.length + 1; // +1 is a \n
@@ -190,7 +172,6 @@ class NotepadMain extends Component<Props> {
     let functionDescriptor = <div />;
 
     const tempFocusedFunction = { ...this.state.focusedFunction };
-    // console.log(tempFocusedFunction);
 
     if (tempFocusedFunction.text) {
       functionDescriptor = (
@@ -211,7 +192,11 @@ class NotepadMain extends Component<Props> {
           className={classes.appBar}
           style={appBarStyle}
         >
-          <Toolbar />
+          <Toolbar>
+            <Typography variant="h6" color="inherit" className={classes.title}>
+              DEFEM Preprocessor
+            </Typography>
+          </Toolbar>
         </AppBar>
         <Drawer
           variant="permanent"
