@@ -7,7 +7,12 @@ import { withStyles } from '@material-ui/core/styles';
 import { ipcRenderer } from 'electron';
 import Typography from '@material-ui/core/Typography';
 import FunctionDescriptor from './NotepadComponents/FunctionDescriptor';
-import { FUNCTIONS_DEF_LOAD, CATCH_ON_MAIN } from '../constants/constants';
+import {
+  FUNCTIONS_DEF_LOAD,
+  CATCH_ON_MAIN,
+  REQUEST_DATA_TO_SAVE,
+  SEND_DATA_TO_SAVE
+} from '../constants/constants';
 // import { t } from 'testcafe';
 
 const drawerWidth = 400;
@@ -55,19 +60,27 @@ class NotepadMain extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
-      prevDate: new Date()
+      prevDate: new Date(),
+      currentTextValue: ''
     };
 
     ipcRenderer.on(FUNCTIONS_DEF_LOAD, (event, data) => {
-      const parsedFunDefs = data;
-
+      const parsedFunDefs = JSON.parse(data);
       this.setState({ functionsDef: parsedFunDefs });
-      console.log(parsedFunDefs);
+    });
+
+    ipcRenderer.on(REQUEST_DATA_TO_SAVE, () => {
+      this.prepareAndSendData();
     });
   }
 
   componentDidMount = () => {
     ipcRenderer.send(CATCH_ON_MAIN, 'ping');
+  };
+
+  prepareAndSendData = () => {
+    const data = this.state.currentTextValue;
+    ipcRenderer.send(SEND_DATA_TO_SAVE, data);
   };
 
   findFun = funBegin => element =>
@@ -163,7 +176,12 @@ class NotepadMain extends Component<Props> {
       currentLineStart += line.length + 1; // +1 is a \n
     });
 
-    this.setState({ focusedFunction: currentFocused });
+    console.log('Current focused: ', currentFocused);
+
+    this.setState({
+      focusedFunction: currentFocused,
+      currentTextValue: currentValue
+    });
   };
 
   render() {

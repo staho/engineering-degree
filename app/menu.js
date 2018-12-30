@@ -31,19 +31,15 @@ export default class MenuBuilder {
     }
     if (!readFile) return;
 
-    return JSON.parse(readFile);
+    return readFile;
   }
 
   openDialog = () => {
-    console.log('Hops');
-
     dialog.showOpenDialog(fileNames => {
       if (fileNames === undefined) {
         console.log('No file selected');
         return;
       }
-
-      console.log(fileNames);
 
       fs.readFile(fileNames[0], 'utf-8', (err, data) => {
         if (err) {
@@ -52,9 +48,19 @@ export default class MenuBuilder {
 
         this.mainWindow.webContents.send(FUNCTIONS_DEF_LOAD, data);
         this.saveDefinitionsFileToAppData(data);
-        console.log(`The file content: ${data}`);
       });
     });
+  };
+
+  saveDialog = () => {
+    const options = {
+      defaultPath: app.getPath('documents')
+    };
+
+    const savePath = dialog.showSaveDialog(null, options, path => {
+      console.log(path);
+    });
+    fs.writeFileSync(savePath, '');
   };
 
   buildMenu() {
@@ -263,6 +269,11 @@ export default class MenuBuilder {
             click: () => {
               this.mainWindow.close();
             }
+          },
+          {
+            label: '&Save',
+            accelerator: 'Ctrl+S',
+            click: () => this.saveDialog()
           }
         ]
       },

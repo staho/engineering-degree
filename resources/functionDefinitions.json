@@ -34,7 +34,501 @@
       ]
     },
     {
-      "name": "XYZcadlo",
+      "name": "XYZcadlo27",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo26",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo25",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo24",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo23",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo22",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo21",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo20",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo19",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo18",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo17",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo16",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo15",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo14",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo13",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo12",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo11",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo10",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo1",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo2",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo3",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo4",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo5",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo6",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo7",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo8",
+      "variables": [
+        [
+          {
+            "name": "X",
+            "desc": "Zmienna X przechowuje wartość parametru X"
+          },
+          {
+            "name": "Y",
+            "desc": "Zmienna Y przechowuje wartość parametru Y"
+          },
+          {
+            "name": "Z",
+            "desc": "Zmienna Z przechowuje wartość parametru Z"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "XYZcadlo9",
       "variables": [
         [
           {

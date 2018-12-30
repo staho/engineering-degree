@@ -33,7 +33,7 @@ class FunctionDescriptor extends React.Component {
     const { definition } = this.props;
     const { focusedVarNo } = this.props;
 
-    let enumerate = 0;
+    let enumerate = 1;
 
     const variables = [];
     definition.variables.forEach(arrOfVariables => {
