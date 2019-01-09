@@ -69,8 +69,10 @@ class NotepadMain extends Component<Props> {
       this.setState({ functionsDef: parsedFunDefs });
     });
 
-    ipcRenderer.on(REQUEST_DATA_TO_SAVE, () => {
-      this.prepareAndSendData();
+    ipcRenderer.on(REQUEST_DATA_TO_SAVE, (event, data) => {
+      const path = data;
+      console.log('Path in main: ', path);
+      this.prepareAndSendData(path);
     });
   }
 
@@ -78,8 +80,12 @@ class NotepadMain extends Component<Props> {
     ipcRenderer.send(CATCH_ON_MAIN, 'ping');
   };
 
-  prepareAndSendData = () => {
-    const data = this.state.currentTextValue;
+  prepareAndSendData = path => {
+    const data = {
+      text: this.state.currentTextValue,
+      path
+    };
+    console.log('Request', data);
     ipcRenderer.send(SEND_DATA_TO_SAVE, data);
   };
 

@@ -1,7 +1,12 @@
 // @flow
-import { app, Menu, shell, BrowserWindow, dialog } from 'electron';
+import { app, Menu, shell, BrowserWindow, dialog, ipcMain } from 'electron';
 import fs from 'fs';
-import { FUNCTIONS_DEF_LOAD, LAST_FILE_NAME } from './constants/constants';
+import {
+  FUNCTIONS_DEF_LOAD,
+  LAST_FILE_NAME,
+  REQUEST_DATA_TO_SAVE,
+  SEND_DATA_TO_SAVE
+} from './constants/constants';
 
 export default class MenuBuilder {
   mainWindow: BrowserWindow;
@@ -57,10 +62,15 @@ export default class MenuBuilder {
       defaultPath: app.getPath('documents')
     };
 
-    const savePath = dialog.showSaveDialog(null, options, path => {
+    this.savePath = dialog.showSaveDialog(null, options, path => {
       console.log(path);
+      this.mainWindow.webContents.send(REQUEST_DATA_TO_SAVE, path);
     });
-    fs.writeFileSync(savePath, '');
+  };
+
+  saveDataToPath = (event, data) => {
+    console.log(data.path);
+    fs.writeFileSync(data.path, data.text);
   };
 
   buildMenu() {
@@ -78,6 +88,11 @@ export default class MenuBuilder {
 
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
+
+    ipcMain.on(SEND_DATA_TO_SAVE, (event, data) => {
+      this.saveDataToPath(event, data);
+      console.log('IN FUNCTION');
+    });
 
     return menu;
   }
