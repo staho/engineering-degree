@@ -251,6 +251,11 @@ export default class MenuBuilder {
           label: 'Open',
           accelerator: 'Command + O',
           click: () => this.openDialog()
+        },
+        {
+          label: 'Save',
+          accelerator: 'Command+S',
+          click: () => this.saveDialog()
         }
       ]
     };
