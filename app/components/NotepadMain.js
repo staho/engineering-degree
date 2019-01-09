@@ -11,7 +11,8 @@ import {
   FUNCTIONS_DEF_LOAD,
   CATCH_ON_MAIN,
   REQUEST_DATA_TO_SAVE,
-  SEND_DATA_TO_SAVE
+  SEND_DATA_TO_SAVE,
+  FILE_OPENED
 } from '../constants/constants';
 // import { t } from 'testcafe';
 
@@ -61,7 +62,8 @@ class NotepadMain extends Component<Props> {
     super(props);
     this.state = {
       prevDate: new Date(),
-      currentTextValue: ''
+      currentTextValue: '',
+      text: ''
     };
 
     ipcRenderer.on(FUNCTIONS_DEF_LOAD, (event, data) => {
@@ -73,6 +75,10 @@ class NotepadMain extends Component<Props> {
       const path = data;
       console.log('Path in main: ', path);
       this.prepareAndSendData(path);
+    });
+
+    ipcRenderer.on(FILE_OPENED, (event, data) => {
+      this.setState({ text: data });
     });
   }
 
@@ -113,6 +119,7 @@ class NotepadMain extends Component<Props> {
   };
 
   preProcessChange = event => {
+    this.setState({ text: event.target.value });
     const date = new Date();
 
     if (this.state.prevDate) {
@@ -245,6 +252,7 @@ class NotepadMain extends Component<Props> {
             onClick={this.handleClick}
             onKeyUp={this.handleKeyUp}
             onKeyDown={this.handleKeyDown}
+            value={this.state.text}
           />
         </main>
       </div>

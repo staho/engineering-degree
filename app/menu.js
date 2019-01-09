@@ -5,7 +5,8 @@ import {
   FUNCTIONS_DEF_LOAD,
   LAST_FILE_NAME,
   REQUEST_DATA_TO_SAVE,
-  SEND_DATA_TO_SAVE
+  SEND_DATA_TO_SAVE,
+  FILE_OPENED
 } from './constants/constants';
 
 export default class MenuBuilder {
@@ -53,6 +54,22 @@ export default class MenuBuilder {
 
         this.mainWindow.webContents.send(FUNCTIONS_DEF_LOAD, data);
         this.saveDefinitionsFileToAppData(data);
+      });
+    });
+  };
+
+  openFileDialog = () => {
+    dialog.showOpenDialog(fileNames => {
+      if (fileNames === undefined) {
+        console.log('No file selected');
+        return;
+      }
+      fs.readFile(fileNames[0], 'utf-8', (err, data) => {
+        if (err) {
+          console.error('An error occured');
+        }
+        this.mainWindow.webContents.send(FILE_OPENED, data);
+        // todo: save last opened files
       });
     });
   };
@@ -248,14 +265,19 @@ export default class MenuBuilder {
       label: 'File',
       submenu: [
         {
-          label: 'Open',
-          accelerator: 'Command + O',
+          label: 'Open definitions',
+          accelerator: 'Command + Shift + O',
           click: () => this.openDialog()
         },
         {
           label: 'Save',
-          accelerator: 'Command+S',
+          accelerator: 'Command + S',
           click: () => this.saveDialog()
+        },
+        {
+          label: 'Open',
+          accelerator: 'Command + O',
+          click: () => this.openFileDialog()
         }
       ]
     };
@@ -279,9 +301,14 @@ export default class MenuBuilder {
         label: '&File',
         submenu: [
           {
-            label: '&Open',
-            accelerator: 'Ctrl+O',
+            label: '&Open definitions',
+            accelerator: 'Ctrl + Shift + O',
             click: () => this.openDialog()
+          },
+          {
+            label: '&Open',
+            accelerator: 'Ctrl + O',
+            click: () => this.openFileDialog()
           },
           {
             label: '&Close',
