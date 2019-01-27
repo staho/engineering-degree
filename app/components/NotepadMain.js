@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import Drawer from '@material-ui/core/Drawer';
+import IconButton from '@material-ui/core/IconButton';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import { ipcRenderer } from 'electron';
 import Typography from '@material-ui/core/Typography';
+import MenuIcon from '@material-ui/icons/Menu';
 import FunctionDescriptor from './NotepadComponents/FunctionDescriptor';
 import AppRoutesDrawer from './AppRoutesDrawer';
 import {
@@ -51,7 +53,11 @@ const styles = theme => ({
       display: 'block'
     }
   },
-  toolbar: theme.mixins.toolbar
+  toolbar: theme.mixins.toolbar,
+  menuButton: {
+    marginLeft: -12,
+    marginRight: 20
+  }
 });
 
 const delimiter = ' ';
@@ -237,8 +243,16 @@ class NotepadMain extends Component<Props> {
           style={appBarStyle}
         >
           <Toolbar>
+            <IconButton
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="Menu"
+              onClick={this.onOpenRoutesDrawer}
+            >
+              <MenuIcon />
+            </IconButton>
             <Typography variant="h6" color="inherit" className={classes.title}>
-              DEFEM Preprocessor
+              DEFEM Preprocessor - Structure editor
             </Typography>
           </Toolbar>
         </AppBar>

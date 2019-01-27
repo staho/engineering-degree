@@ -10,6 +10,8 @@ import {
 import { Notes, Bookmarks } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
+import routes from '../constants/routes';
 
 const styles = theme => ({
   root: {
@@ -38,10 +40,12 @@ class AppRoutesDrawer extends React.Component<Props> {
             <ListItemText primary="Editor" />
           </ListItem>
           <ListItem button key="function-browser">
-            <ListItemIcon>
-              <Bookmarks />
-            </ListItemIcon>
-            <ListItemText primary="Function browser" />
+            <Link to={routes.FUN_BROWSER}>
+              <ListItemIcon>
+                <Bookmarks />
+              </ListItemIcon>
+              <ListItemText primary="Function browser" />
+            </Link>
           </ListItem>
         </List>
       </div>
@@ -50,14 +54,14 @@ class AppRoutesDrawer extends React.Component<Props> {
     return (
       <Drawer
         open={this.props.open}
-        onClose={this.props.onRoutesDrawerClose}
+        onClose={this.props.onClose}
         variant="temporary"
       >
         <div
           tabIndex={0}
           role="button"
-          onClick={this.props.onRoutesDrawerClose}
-          onKeyDown={this.props.onRoutesDrawerClose}
+          onClick={this.props.onClose}
+          onKeyDown={this.props.onClose}
         >
           {listOfRoutes}
         </div>
