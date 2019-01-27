@@ -9,8 +9,7 @@ import FunBrowserPage from './containers/FunBrowserPage';
 export default () => (
   <App>
     <Switch>
-      <Route path={routes.HOME} component={NotepadMainPage} />
-      <Route path={routes.NOTEPAD} component={NotepadMainPage} />
+      <Route exact path={routes.NOTEPAD} component={NotepadMainPage} />
       <Route path={routes.FUN_BROWSER} component={FunBrowserPage} />
     </Switch>
   </App>
