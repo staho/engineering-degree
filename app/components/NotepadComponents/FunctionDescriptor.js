@@ -39,15 +39,17 @@ class FunctionDescriptor extends React.Component {
     definition.variables.forEach(arrOfVariables => {
       arrOfVariables.forEach(variable => {
         variables.push(
-          <ListItem key={enumerate}>
+          <ListItem key={`function-list-item-${enumerate}`}>
             <ListItemText disableTypography>
               <Typography
                 gutterBottom
                 color={enumerate === focusedVarNo ? 'error' : 'default'}
               >
-                <Typography variant="subtitle2" gutterBottom>{`Zmienna: ${
-                  variable.name
-                }`}</Typography>
+                <Typography
+                  component="span"
+                  variant="subtitle2"
+                  gutterBottom
+                >{`Zmienna: ${variable.name}`}</Typography>
                 {`${variable.desc}`}
               </Typography>
             </ListItemText>
@@ -55,7 +57,13 @@ class FunctionDescriptor extends React.Component {
         );
         enumerate += 1;
       });
-      variables.push(<Divider />);
+      const lengthOfVars = definition.variables.length;
+      if (
+        lengthOfVars > 1 &&
+        definition.variables[lengthOfVars - 1] !== arrOfVariables
+      ) {
+        variables.push(<Divider key={`divider-${enumerate}`} />);
+      }
     });
 
     console.log(variables);

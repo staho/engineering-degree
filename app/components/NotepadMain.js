@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { ipcRenderer } from 'electron';
 import Typography from '@material-ui/core/Typography';
 import FunctionDescriptor from './NotepadComponents/FunctionDescriptor';
+import AppRoutesDrawer from './AppRoutesDrawer';
 import {
   FUNCTIONS_DEF_LOAD,
   CATCH_ON_MAIN,
@@ -63,7 +64,11 @@ class NotepadMain extends Component<Props> {
     this.state = {
       prevDate: new Date(),
       currentTextValue: '',
-      text: ''
+      text: '',
+      focusedFunction: {
+        focusedVarNo: undefined
+      },
+      openRoutesDrawer: false
     };
 
     ipcRenderer.on(FUNCTIONS_DEF_LOAD, (event, data) => {
@@ -129,6 +134,14 @@ class NotepadMain extends Component<Props> {
         this.setState({ prevDate: date });
       }
     }
+  };
+
+  onRoutesDrawerClose = () => {
+    this.setState({ openRoutesDrawer: false });
+  };
+
+  onOpenRoutesDrawer = () => {
+    this.setState({ openRoutesDrawer: true });
   };
 
   processChange = event => {
@@ -229,6 +242,10 @@ class NotepadMain extends Component<Props> {
             </Typography>
           </Toolbar>
         </AppBar>
+        <AppRoutesDrawer
+          open={this.state.openRoutesDrawer}
+          onClose={this.onRoutesDrawerClose}
+        />
         <Drawer
           variant="permanent"
           classes={{
