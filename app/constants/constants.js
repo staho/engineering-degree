@@ -4,5 +4,6 @@ module.exports = {
   LAST_FILE_NAME: 'lastFile.json',
   REQUEST_DATA_TO_SAVE: 'request-data-to-save',
   SEND_DATA_TO_SAVE: 'send-data-to-save',
-  FILE_OPENED: 'file-opened'
+  FILE_OPENED: 'file-opened',
+  NOTEPAD_UNMOUNT: 'notepad-unmount'
 };

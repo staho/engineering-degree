@@ -6,7 +6,9 @@ import {
   LAST_FILE_NAME,
   REQUEST_DATA_TO_SAVE,
   SEND_DATA_TO_SAVE,
-  FILE_OPENED
+  FILE_OPENED,
+  // CATCH_ON_MAIN,
+  NOTEPAD_UNMOUNT
 } from './constants/constants';
 
 export default class MenuBuilder {
@@ -14,6 +16,7 @@ export default class MenuBuilder {
 
   constructor(mainWindow: BrowserWindow) {
     this.mainWindow = mainWindow;
+    this.mainWindow.tempMem = {};
     this.appDataPath = `${app.getPath('appData')}/DefemPreprocessor`;
   }
 
@@ -86,7 +89,7 @@ export default class MenuBuilder {
   };
 
   saveDataToPath = (event, data) => {
-    console.log(data.path);
+    // console.log(data.path, data.saveToFile);
     fs.writeFileSync(data.path, data.text);
   };
 
@@ -109,6 +112,12 @@ export default class MenuBuilder {
     ipcMain.on(SEND_DATA_TO_SAVE, (event, data) => {
       this.saveDataToPath(event, data);
       console.log('IN FUNCTION');
+    });
+
+    ipcMain.on(NOTEPAD_UNMOUNT, (event, data) => {
+      console.log(data.text);
+      this.mainWindow.tempMem.text = data.text;
+      // this.tempMem.text = data.text
     });
 
     return menu;

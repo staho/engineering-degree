@@ -15,7 +15,8 @@ import {
   CATCH_ON_MAIN,
   REQUEST_DATA_TO_SAVE,
   SEND_DATA_TO_SAVE,
-  FILE_OPENED
+  FILE_OPENED,
+  NOTEPAD_UNMOUNT
 } from '../constants/constants';
 // import { t } from 'testcafe';
 
@@ -85,7 +86,7 @@ class NotepadMain extends Component<Props> {
     ipcRenderer.on(REQUEST_DATA_TO_SAVE, (event, data) => {
       const path = data;
       console.log('Path in main: ', path);
-      this.prepareAndSendData(path);
+      this.prepareAndSendData(path, true);
     });
 
     ipcRenderer.on(FILE_OPENED, (event, data) => {
@@ -94,7 +95,15 @@ class NotepadMain extends Component<Props> {
   }
 
   componentDidMount = () => {
+    console.log('XDDXDXDs');
     ipcRenderer.send(CATCH_ON_MAIN, 'ping');
+  };
+
+  componentWillUnmount = () => {
+    const data = {
+      text: this.state.currentTextValue
+    };
+    ipcRenderer.send(NOTEPAD_UNMOUNT, data);
   };
 
   prepareAndSendData = path => {

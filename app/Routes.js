@@ -10,7 +10,7 @@ export default () => (
   <App>
     <Switch>
       <Route exact path={routes.NOTEPAD} component={NotepadMainPage} />
-      <Route path={routes.FUN_BROWSER} component={FunBrowserPage} />
+      <Route exact path={routes.FUN_BROWSER} component={FunBrowserPage} />
     </Switch>
   </App>
 );

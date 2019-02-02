@@ -33,22 +33,22 @@ class AppRoutesDrawer extends React.Component<Props> {
     const listOfRoutes = (
       <div className={classes.list}>
         <List>
-          <ListItem button key="notepad-main">
-            <Link to={routes.NOTEPAD}>
+          <Link to={routes.NOTEPAD}>
+            <ListItem button key="notepad-main">
               <ListItemIcon>
                 <Notes />
               </ListItemIcon>
               <ListItemText primary="Editor" />
-            </Link>
-          </ListItem>
-          <ListItem button key="function-browser">
-            <Link to={routes.FUN_BROWSER}>
+            </ListItem>
+          </Link>
+          <Link to={routes.FUN_BROWSER}>
+            <ListItem button key="function-browser">
               <ListItemIcon>
                 <Bookmarks />
               </ListItemIcon>
               <ListItemText primary="Function browser" />
-            </Link>
-          </ListItem>
+            </ListItem>
+          </Link>
         </List>
       </div>
     );

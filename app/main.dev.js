@@ -14,7 +14,11 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
-import { CATCH_ON_MAIN, FUNCTIONS_DEF_LOAD } from './constants/constants';
+import {
+  CATCH_ON_MAIN,
+  FUNCTIONS_DEF_LOAD,
+  FILE_OPENED
+} from './constants/constants';
 
 export default class AppUpdater {
   constructor() {
@@ -98,8 +102,10 @@ app.on('ready', async () => {
 
   ipcMain.on(CATCH_ON_MAIN, (event, arg) => {
     console.log(definitionData, arg);
+    console.log(mainWindow.tempMem.text);
 
     mainWindow.webContents.send(FUNCTIONS_DEF_LOAD, definitionData);
+    mainWindow.webContents.send(FILE_OPENED, mainWindow.tempMem.text);
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);

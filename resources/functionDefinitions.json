@@ -2,6 +2,7 @@
   "functions": [
     {
       "name": "Abecadlo",
+      "desc": "Funkcja abecadlo przedstawia część alfabetu abecadłowego",
       "variables": [
         [
           {
