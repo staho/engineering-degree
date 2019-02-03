@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
 import Drawer from '@material-ui/core/Drawer';
-import IconButton from '@material-ui/core/IconButton';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import { ipcRenderer } from 'electron';
-import Typography from '@material-ui/core/Typography';
-import MenuIcon from '@material-ui/icons/Menu';
 import FunctionDescriptor from './NotepadComponents/FunctionDescriptor';
 import AppRoutesDrawer from './AppRoutesDrawer';
+import AppBarDefem from './AppBarDefem';
 import {
   FUNCTIONS_DEF_LOAD,
   CATCH_ON_MAIN,
@@ -21,10 +17,6 @@ import {
 // import { t } from 'testcafe';
 
 const drawerWidth = 400;
-
-const appBarStyle = {
-  backgroundColor: '#2196f3'
-};
 
 const styles = theme => ({
   root: {
@@ -246,25 +238,10 @@ class NotepadMain extends Component<Props> {
     // todo: move appbar to component above
     return (
       <div className={classes.root}>
-        <AppBar
-          position="absolute"
-          className={classes.appBar}
-          style={appBarStyle}
-        >
-          <Toolbar>
-            <IconButton
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="Menu"
-              onClick={this.onOpenRoutesDrawer}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" color="inherit" className={classes.title}>
-              DEFEM Preprocessor - Structure editor
-            </Typography>
-          </Toolbar>
-        </AppBar>
+        <AppBarDefem
+          onOpenRoutesDrawer={this.onOpenRoutesDrawer}
+          type="EDITOR"
+        />
         <AppRoutesDrawer
           open={this.state.openRoutesDrawer}
           onClose={this.onRoutesDrawerClose}

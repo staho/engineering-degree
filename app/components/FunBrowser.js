@@ -1,15 +1,10 @@
 import React, { Component } from 'react';
-import AppBar from '@material-ui/core/AppBar';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import MenuIcon from '@material-ui/icons/Menu';
-import IconButton from '@material-ui/core/IconButton';
-import Toolbar from '@material-ui/core/Toolbar';
 import { ipcRenderer } from 'electron';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -17,10 +12,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Divider from '@material-ui/core/Divider';
 import { FUNCTIONS_DEF_LOAD, CATCH_ON_MAIN } from '../constants/constants';
 import AppRoutesDrawer from './AppRoutesDrawer';
-
-const appBarStyle = {
-  backgroundColor: '#2196f3'
-};
+import AppBarDefem from './AppBarDefem';
 
 const styles = theme => ({
   panels: {
@@ -159,25 +151,10 @@ class FunBrowser extends Component<Props> {
 
     return (
       <div className={classes.root}>
-        <AppBar
-          position="absolute"
-          className={classes.appBar}
-          style={appBarStyle}
-        >
-          <Toolbar>
-            <IconButton
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="Menu"
-              onClick={this.onOpenRoutesDrawer}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" color="inherit" className={classes.title}>
-              DEFEM Preprocessor - Function browser
-            </Typography>
-          </Toolbar>
-        </AppBar>
+        <AppBarDefem
+          onOpenRoutesDrawer={this.onOpenRoutesDrawer}
+          type="FUN_BROWSER"
+        />
         <AppRoutesDrawer
           open={this.state.openRoutesDrawer}
           onClose={this.onRoutesDrawerClose}
