@@ -123,7 +123,24 @@ class NotepadMain extends Component<Props> {
   };
 
   handleKeyDown = event => {
-    if (event.keyCode === 9) event.preventDefault();
+    if (event.keyCode === 9) {
+      event.preventDefault();
+      const val = event.target.value;
+
+      const start = event.target.selectionStart;
+
+      const end = event.target.selectionEnd;
+
+      let textTemp = event.target.value;
+
+      // set textarea value to: text before caret + tab + text after caret
+      textTemp = `${val.substring(0, start)}\t${val.substring(end)}`;
+
+      // put caret at right position again
+      // event.target.selectionStart = event.selectionEnd = start + 1;
+
+      this.setState({ text: textTemp });
+    }
   };
 
   focusFunctionBasedOnCaret = event => {
