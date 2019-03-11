@@ -149,6 +149,8 @@ class NotepadMain extends Component<Props> {
 
   preProcessChange = event => {
     this.setState({ text: event.target.value });
+    console.log(event);
+    //
     const date = new Date();
 
     if (this.state.prevDate) {
@@ -169,6 +171,7 @@ class NotepadMain extends Component<Props> {
   };
 
   processChange = event => {
+    console.log(event.nativeEvent.selection);
     const currentValue = event.target.value;
 
     if (!currentValue) return;

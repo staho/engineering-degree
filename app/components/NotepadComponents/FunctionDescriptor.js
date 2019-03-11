@@ -66,8 +66,6 @@ class FunctionDescriptor extends React.Component {
       }
     });
 
-    console.log(variables);
-
     return (
       <ExpansionPanel expanded={focused}>
         <ExpansionPanelSummary>
