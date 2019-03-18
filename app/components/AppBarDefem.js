@@ -105,8 +105,9 @@ class AppBarDefem extends Component<Props> {
     super(props);
     this.state = {
       openSettings: false,
-      // delimiter: ' ',
-      delimiterLabel: 'Space'
+      delimiterTag: 'SPACE',
+      delimiterLabel: 'Space',
+      searchValue: ''
     };
   }
 
@@ -134,9 +135,22 @@ class AppBarDefem extends Component<Props> {
       delim => delim.label === event.target.value
     );
     this.setState({
-      // delimiter: delimiterObj.realValue,
+      delimiterTag: delimiterObj.value,
       delimiterLabel: delimiterObj.label
     });
+  };
+
+  onSearchInputChange = event => {
+    console.log(event);
+    this.setState({ searchValue: event.target.value });
+    if (event.target.value === '') this.props.onSearch('');
+    // this.props.onSearch(event.target.value.toUpperCase())
+  };
+
+  onSearchEnter = event => {
+    console.log(event.keyCode);
+    if (event.keyCode === 13)
+      this.props.onSearch(event.target.value.toUpperCase());
   };
 
   render() {
@@ -158,6 +172,9 @@ class AppBarDefem extends Component<Props> {
               root: classes.inputRoot,
               input: classes.inputInput
             }}
+            onChange={this.onSearchInputChange}
+            value={this.state.searchValue}
+            onKeyDown={this.onSearchEnter}
           />
         </div>
       );
@@ -197,6 +214,7 @@ class AppBarDefem extends Component<Props> {
           TransitionComponent={Transition}
           keepMounted
           onClose={this.onSettingsClose}
+          maxWidth="lg"
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
         >

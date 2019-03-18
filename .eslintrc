@@ -45,6 +45,7 @@
     "promise/no-native": "off",
     "react/destructuring-assignment": "off",
     "react/forbid-prop-types": "off",
+    "react/no-unused-state": "off",
     "react/sort-comp": [
       "error",
       {

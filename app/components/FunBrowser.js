@@ -66,7 +66,8 @@ class FunBrowser extends Component<Props> {
     super(props);
     this.state = {
       openRoutesDrawer: false,
-      expanded: null
+      expanded: null,
+      searchText: ''
     };
 
     ipcRenderer.on(FUNCTIONS_DEF_LOAD, (event, data) => {
@@ -93,6 +94,10 @@ class FunBrowser extends Component<Props> {
     });
   };
 
+  onSearch = text => {
+    this.setState({ searchText: text });
+  };
+
   render() {
     const { classes } = this.props;
     const { expanded } = this.state;
@@ -102,7 +107,15 @@ class FunBrowser extends Component<Props> {
     // console.log(this.state.functionsDef)
 
     if (this.state.functionsDef !== undefined) {
+      // const funDefs = this.state
+
       functionPanels = this.state.functionsDef.functions.map((fun, index) => {
+        if (
+          !fun.name.toUpperCase().includes(this.state.searchText) &&
+          this.state.searchText !== ''
+        )
+          return <div />;
+
         let listItems = <div />;
         if (expanded === `panel${index}`) {
           listItems = [];
@@ -124,7 +137,6 @@ class FunBrowser extends Component<Props> {
         }
 
         const key = index * 2;
-
         return (
           <ExpansionPanel
             key={`function-expansion-panel-${key}`}
@@ -154,6 +166,7 @@ class FunBrowser extends Component<Props> {
         <AppBarDefem
           onOpenRoutesDrawer={this.onOpenRoutesDrawer}
           type="FUN_BROWSER"
+          onSearch={this.onSearch}
         />
         <AppRoutesDrawer
           open={this.state.openRoutesDrawer}

@@ -1,0 +1,38 @@
+{
+  "functions": [
+    {
+      "name": "MAIN_FUNCTION",
+      "desc": "Funkcja MAIN odpowiada za główne przetwarzanie pliku",
+      "variables": [
+        [
+          {
+            "name": "Nazwa pliku wejściowego",
+            "desc": "Podaj nazwę z rozszerzeniem *.xyz"
+          },
+          {
+            "name": "Flaga procesowania",
+            "desc": "-l (logowanie do pliku) -f (szybkie procesowanie)"
+          },
+          {
+            "name": "Typ przestrzeni",
+            "desc": "2D, 3D, 4D"
+          }
+        ],
+        [
+          {
+            "name": "Nazwa pliku wyjściowego",
+            "desc": "Podaj nazwę z rozszerzeniem *.solv"
+          },
+          {
+            "name": "Format pliku",
+            "desc": "XYZ/ABC/EFG"
+          },
+          {
+            "name": "Szczegółowość",
+            "desc": "Wpisz liczbę z przedziału 1-10"
+          }
+        ]
+      ]
+    }
+  ]
+}

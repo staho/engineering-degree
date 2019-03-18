@@ -53,7 +53,7 @@ const styles = theme => ({
   }
 });
 
-const delimiter = ' ';
+const delimiter = '\t';
 
 class NotepadMain extends Component<Props> {
   props: Props;
@@ -67,7 +67,8 @@ class NotepadMain extends Component<Props> {
       focusedFunction: {
         focusedVarNo: undefined
       },
-      openRoutesDrawer: false
+      openRoutesDrawer: false,
+      delimiter: '\t'
     };
 
     ipcRenderer.on(FUNCTIONS_DEF_LOAD, (event, data) => {
@@ -77,7 +78,6 @@ class NotepadMain extends Component<Props> {
 
     ipcRenderer.on(REQUEST_DATA_TO_SAVE, (event, data) => {
       const path = data;
-      console.log('Path in main: ', path);
       this.prepareAndSendData(path, true);
     });
 
@@ -87,7 +87,6 @@ class NotepadMain extends Component<Props> {
   }
 
   componentDidMount = () => {
-    console.log('XDDXDXDs');
     ipcRenderer.send(CATCH_ON_MAIN, 'ping');
   };
 
@@ -149,8 +148,6 @@ class NotepadMain extends Component<Props> {
 
   preProcessChange = event => {
     this.setState({ text: event.target.value });
-    console.log(event);
-    //
     const date = new Date();
 
     if (this.state.prevDate) {
@@ -171,23 +168,22 @@ class NotepadMain extends Component<Props> {
   };
 
   processChange = event => {
-    console.log(event.nativeEvent.selection);
     const currentValue = event.target.value;
-
-    if (!currentValue) return;
+    if (!currentValue || !this.state.functionsDef) return;
 
     const splittedString = currentValue.split('\n');
-
     let currentLineStart = 0;
+
     let varCounter = 0;
 
     let currentFocused = {};
+
     let tempFocused = {};
 
     splittedString.forEach(line => {
       const lineEnd = currentLineStart + line.length;
 
-      if (line.startsWith('*') && this.state.functionsDef) {
+      if (line.startsWith('*')) {
         const functionText = line.replace('*', '');
 
         const funSearch = this.findFun(functionText);
@@ -211,7 +207,7 @@ class NotepadMain extends Component<Props> {
         }
         varCounter = 0;
       } else {
-        const splittedByDelimiter = line.split(delimiter); // what if someone makes two delimiters in row
+        const splittedByDelimiter = line.split(delimiter);
         let tempLen = currentLineStart;
 
         splittedByDelimiter.forEach(elem => {
@@ -229,8 +225,6 @@ class NotepadMain extends Component<Props> {
       currentLineStart += line.length + 1; // +1 is a \n
     });
 
-    console.log('Current focused: ', currentFocused);
-
     this.setState({
       focusedFunction: currentFocused,
       currentTextValue: currentValue
@@ -239,6 +233,11 @@ class NotepadMain extends Component<Props> {
 
   render() {
     const { classes } = this.props;
+    // const { textValue } = this.state.text !== undefined ? this.state.text : ''
+    let textValue = this.state.text;
+    if (textValue === undefined) {
+      textValue = '';
+    }
 
     let functionDescriptor = <div />;
 
@@ -255,7 +254,6 @@ class NotepadMain extends Component<Props> {
         />
       );
     }
-    // todo: move appbar to component above
     return (
       <div className={classes.root}>
         <AppBarDefem
@@ -289,7 +287,7 @@ class NotepadMain extends Component<Props> {
             onClick={this.handleClick}
             onKeyUp={this.handleKeyUp}
             onKeyDown={this.handleKeyDown}
-            value={this.state.text}
+            value={textValue}
           />
         </main>
       </div>
