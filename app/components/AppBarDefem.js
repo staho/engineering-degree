@@ -18,9 +18,11 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import { fade } from '@material-ui/core/styles/colorManipulator';
+import { ipcRenderer } from 'electron';
 
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
+import { DELIMITER_CHANGE_SEND, DELIMITERS } from '../constants/constants';
 
 const appBarStyle = {
   backgroundColor: '#2196f3'
@@ -74,24 +76,6 @@ const styles = theme => ({
   }
 });
 
-const delimiters = [
-  {
-    value: 'SPACE',
-    realValue: ' ',
-    label: 'Space'
-  },
-  {
-    value: 'TAB',
-    realValue: '\t',
-    label: 'Tab'
-  },
-  {
-    value: ';',
-    realValue: ';',
-    label: 'Semicolon'
-  }
-];
-
 const Transition = props => <Slide direction="up" {...props} />;
 
 // TODO: Make settings pop-up
@@ -131,9 +115,11 @@ class AppBarDefem extends Component<Props> {
   };
 
   handleChange = event => {
-    const delimiterObj = delimiters.find(
+    const delimiterObj = DELIMITERS.find(
       delim => delim.label === event.target.value
     );
+
+    ipcRenderer.send(DELIMITER_CHANGE_SEND, delimiterObj);
     this.setState({
       delimiterTag: delimiterObj.value,
       delimiterLabel: delimiterObj.label
@@ -239,7 +225,7 @@ class AppBarDefem extends Component<Props> {
               margin="normal"
               variant="outlined"
             >
-              {delimiters.map(option => (
+              {DELIMITERS.map(option => (
                 <MenuItem key={option.label} value={option.label}>
                   {option.label}
                 </MenuItem>

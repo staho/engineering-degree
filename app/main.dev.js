@@ -17,7 +17,9 @@ import MenuBuilder from './menu';
 import {
   CATCH_ON_MAIN,
   FUNCTIONS_DEF_LOAD,
-  FILE_OPENED
+  FILE_OPENED,
+  DELIMITER_CHANGE_RECEIVE,
+  DELIMITER_CHANGE_SEND
 } from './constants/constants';
 
 export default class AppUpdater {
@@ -106,6 +108,11 @@ app.on('ready', async () => {
 
     mainWindow.webContents.send(FUNCTIONS_DEF_LOAD, definitionData);
     mainWindow.webContents.send(FILE_OPENED, mainWindow.tempMem.text);
+  });
+
+  ipcMain.on(DELIMITER_CHANGE_SEND, (event, arg) => {
+    console.log(arg);
+    mainWindow.webContents.send(DELIMITER_CHANGE_RECEIVE, arg);
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);

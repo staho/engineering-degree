@@ -12,7 +12,8 @@ import {
   REQUEST_DATA_TO_SAVE,
   SEND_DATA_TO_SAVE,
   FILE_OPENED,
-  NOTEPAD_UNMOUNT
+  NOTEPAD_UNMOUNT,
+  DELIMITER_CHANGE_RECEIVE
 } from '../constants/constants';
 // import { t } from 'testcafe';
 
@@ -53,8 +54,6 @@ const styles = theme => ({
   }
 });
 
-const delimiter = '\t';
-
 class NotepadMain extends Component<Props> {
   props: Props;
 
@@ -62,7 +61,6 @@ class NotepadMain extends Component<Props> {
     super(props);
     this.state = {
       prevDate: new Date(),
-      currentTextValue: '',
       text: '',
       focusedFunction: {
         focusedVarNo: undefined
@@ -83,6 +81,10 @@ class NotepadMain extends Component<Props> {
 
     ipcRenderer.on(FILE_OPENED, (event, data) => {
       this.setState({ text: data });
+    });
+
+    ipcRenderer.on(DELIMITER_CHANGE_RECEIVE, (event, data) => {
+      this.onDelimiterChange(data);
     });
   }
 
@@ -167,7 +169,16 @@ class NotepadMain extends Component<Props> {
     this.setState({ openRoutesDrawer: true });
   };
 
+  onDelimiterChange = newDelimiter => {
+    if (newDelimiter.isRegExp) {
+      this.setState({ delimiter: new RegExp(newDelimiter.realValue, 'g') });
+    } else {
+      this.setState({ delimiter: newDelimiter.realValue });
+    }
+  };
+
   processChange = event => {
+    console.log(this.state.delimiter.toString());
     const currentValue = event.target.value;
     if (!currentValue || !this.state.functionsDef) return;
 
@@ -207,7 +218,8 @@ class NotepadMain extends Component<Props> {
         }
         varCounter = 0;
       } else {
-        const splittedByDelimiter = line.split(delimiter);
+        const splittedByDelimiter = line.split(this.state.delimiter);
+        console.log(splittedByDelimiter);
         let tempLen = currentLineStart;
 
         splittedByDelimiter.forEach(elem => {
@@ -226,8 +238,8 @@ class NotepadMain extends Component<Props> {
     });
 
     this.setState({
-      focusedFunction: currentFocused,
-      currentTextValue: currentValue
+      focusedFunction: currentFocused
+      // currentTextValue: currentValue
     });
   };
 
