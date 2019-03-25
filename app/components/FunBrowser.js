@@ -136,6 +136,7 @@ class FunBrowser extends Component<Props> {
           }
         }
 
+        // TODO: Move it to separate component
         const key = index * 2;
         return (
           <ExpansionPanel

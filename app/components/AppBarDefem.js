@@ -101,6 +101,8 @@ class AppBarDefem extends Component<Props> {
         return 'DEFEM Preprocessor - Structure editor';
       case 'FUN_BROWSER':
         return 'DEFEM Preprocessor - Function browser';
+      case 'TEMPLATE_EDITOR':
+        return 'DEFEM Preprocessor - Template editor';
       default:
         return 'Error';
     }
@@ -127,10 +129,8 @@ class AppBarDefem extends Component<Props> {
   };
 
   onSearchInputChange = event => {
-    console.log(event);
     this.setState({ searchValue: event.target.value });
     if (event.target.value === '') this.props.onSearch('');
-    // this.props.onSearch(event.target.value.toUpperCase())
   };
 
   onSearchEnter = event => {
