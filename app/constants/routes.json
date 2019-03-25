@@ -1,4 +1,5 @@
 {
   "NOTEPAD": "/",
-  "FUN_BROWSER": "/funbrowser"
+  "FUN_BROWSER": "/funbrowser",
+  "TEMPLATE_EDITOR": "/template-editor"
 }

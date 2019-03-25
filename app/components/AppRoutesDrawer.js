@@ -7,7 +7,7 @@ import {
   ListItemText,
   Drawer
 } from '@material-ui/core';
-import { Notes, Bookmarks } from '@material-ui/icons';
+import { Notes, Bookmarks, Edit } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
@@ -47,6 +47,14 @@ class AppRoutesDrawer extends React.Component<Props> {
                 <Bookmarks />
               </ListItemIcon>
               <ListItemText primary="Function browser" />
+            </ListItem>
+          </Link>
+          <Link to={routes.TEMPLATE_EDITOR}>
+            <ListItem button key="function-browser">
+              <ListItemIcon>
+                <Edit />
+              </ListItemIcon>
+              <ListItemText primary="Template editor" />
             </ListItem>
           </Link>
         </List>
