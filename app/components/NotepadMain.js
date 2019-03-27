@@ -263,6 +263,7 @@ class NotepadMain extends Component<Props> {
           focused // deprecated
           definition={tempFocusedFunction.definition}
           focusedVarNo={tempFocusedFunction.focusedVarNo}
+          expanded
         />
       );
     }

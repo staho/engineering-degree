@@ -13,6 +13,7 @@ import Divider from '@material-ui/core/Divider';
 import { FUNCTIONS_DEF_LOAD, CATCH_ON_MAIN } from '../constants/constants';
 import AppRoutesDrawer from './AppRoutesDrawer';
 import AppBarDefem from './AppBarDefem';
+import FunctionDescriptor from './NotepadComponents/FunctionDescriptor';
 
 const styles = theme => ({
   panels: {
@@ -104,11 +105,7 @@ class FunBrowser extends Component<Props> {
 
     let functionPanels = <div />;
 
-    // console.log(this.state.functionsDef)
-
     if (this.state.functionsDef !== undefined) {
-      // const funDefs = this.state
-
       functionPanels = this.state.functionsDef.functions.map((fun, index) => {
         if (
           !fun.name.toUpperCase().includes(this.state.searchText) &&
@@ -116,48 +113,28 @@ class FunBrowser extends Component<Props> {
         )
           return <div />;
 
-        let listItems = <div />;
-        if (expanded === `panel${index}`) {
-          listItems = [];
-          for (let i = 0; i < fun.variables.length; i += 1) {
-            for (let j = 0; j < fun.variables[i].length; j += 1) {
-              listItems.push(
-                <ListItem>
-                  <ListItemText
-                    primary={fun.variables[i][j].name}
-                    secondary={fun.variables[i][j].desc}
-                  />
-                </ListItem>
-              );
-            }
-            if (i !== fun.variables.length - 1) {
-              listItems.push(<Divider />);
-            }
-          }
-        }
+        // <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+        //       <Typography className={classes.heading}>{fun.name}</Typography>
+        //       {fun.desc ? (
+        //         <Typography className={classes.secondaryHeading}>
+        //           {fun.desc}
+        //         </Typography>
+        //       ) : (
+        //         <div />
+        //       )}
+        //     </ExpansionPanelSummary>
 
-        // TODO: Move it to separate component
-        const key = index * 2;
         return (
-          <ExpansionPanel
-            key={`function-expansion-panel-${key}`}
+          <FunctionDescriptor
+            key={`function-descriptor-panel-${index}`}
+            text={fun.name}
+            focused // deprecated
             expanded={expanded === `panel${index}`}
+            definition={fun}
+            focusedVarNo={0}
             onChange={this.handleChange(`panel${index}`)}
-          >
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography className={classes.heading}>{fun.name}</Typography>
-              {fun.desc ? (
-                <Typography className={classes.secondaryHeading}>
-                  {fun.desc}
-                </Typography>
-              ) : (
-                <div />
-              )}
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <List component="nav">{listItems}</List>
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
+            expandIcon={<ExpandMoreIcon />}
+          />
         );
       });
     }

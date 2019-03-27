@@ -32,10 +32,16 @@ class FunctionDescriptor extends React.Component {
     const { focused } = this.props;
     const { definition } = this.props;
     const { focusedVarNo } = this.props;
-
+    const { expanded } = this.props;
+    let expandIcon = <div />;
+    if(this.props.expandIcon) {
+      expandIcon = this.props.expandIcon;
+    }
+    
     let enumerate = 1;
 
     const variables = [];
+    if(expanded){
     definition.variables.forEach(arrOfVariables => {
       arrOfVariables.forEach(variable => {
         variables.push(
@@ -65,10 +71,12 @@ class FunctionDescriptor extends React.Component {
         variables.push(<Divider key={`divider-${enumerate}`} />);
       }
     });
+  }
 
     return (
-      <ExpansionPanel expanded={focused}>
-        <ExpansionPanelSummary>
+      <ExpansionPanel expanded={expanded}
+      onChange={this.props.onChange}>
+        <ExpansionPanelSummary >
           <Typography
             variant="headline"
             component="h3"
