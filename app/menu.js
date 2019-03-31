@@ -5,9 +5,11 @@ import {
   FUNCTIONS_DEF_LOAD,
   LAST_FILE_NAME,
   REQUEST_DATA_TO_SAVE,
+  REQUEST_TEMPLATE_TO_SAVE,
   SEND_DATA_TO_SAVE,
   FILE_OPENED,
   // CATCH_ON_MAIN,
+  TEMPLATE_OPENED,
   NOTEPAD_UNMOUNT
 } from './constants/constants';
 
@@ -43,7 +45,7 @@ export default class MenuBuilder {
     return readFile;
   }
 
-  openDialog = () => {
+  openDialog = type => {
     dialog.showOpenDialog(fileNames => {
       if (fileNames === undefined) {
         console.log('No file selected');
@@ -54,14 +56,15 @@ export default class MenuBuilder {
         if (err) {
           console.error('An error occured');
         }
-
-        this.mainWindow.webContents.send(FUNCTIONS_DEF_LOAD, data);
-        this.saveDefinitionsFileToAppData(data);
+        if (type === FUNCTIONS_DEF_LOAD) {
+          this.saveDefinitionsFileToAppData(data);
+        }
+        this.mainWindow.webContents.send(type, data);
       });
     });
   };
 
-  openFileDialog = () => {
+  openFileDialog = type => {
     dialog.showOpenDialog(fileNames => {
       if (fileNames === undefined) {
         console.log('No file selected');
@@ -71,21 +74,32 @@ export default class MenuBuilder {
         if (err) {
           console.error('An error occured');
         }
-        this.mainWindow.webContents.send(FILE_OPENED, data);
+        this.mainWindow.webContents.send(type, data);
         // todo: save last opened files
       });
     });
   };
 
-  saveDialog = () => {
+  saveDialog = type => {
     const options = {
       defaultPath: app.getPath('documents')
     };
 
     this.savePath = dialog.showSaveDialog(null, options, path => {
       console.log(path);
-      this.mainWindow.webContents.send(REQUEST_DATA_TO_SAVE, path);
+      this.mainWindow.webContents.send(type, path);
     });
+  };
+
+  saveTemplateDialog = () => {
+    //todo
+    console.log("Gowno dupa cycki")
+    this.saveDialog(REQUEST_TEMPLATE_TO_SAVE);
+  };
+
+  openTemplateDialog = () => {
+    this.openFileDialog(TEMPLATE_OPENED);
+    //todo
   };
 
   saveDataToPath = (event, data) => {
@@ -276,17 +290,32 @@ export default class MenuBuilder {
         {
           label: 'Open definitions',
           accelerator: 'Command + Shift + O',
-          click: () => this.openDialog()
+          click: () => this.openDialog(FUNCTIONS_DEF_LOAD)
         },
         {
           label: 'Save',
           accelerator: 'Command + S',
-          click: () => this.saveDialog()
+          click: () => this.saveDialog(REQUEST_DATA_TO_SAVE)
         },
         {
           label: 'Open',
           accelerator: 'Command + O',
-          click: () => this.openFileDialog()
+          click: () => this.openFileDialog(FILE_OPENED)
+        }
+      ]
+    };
+
+    const templateMenu = {
+      label: 'Templates',
+      submenu: [
+        {
+          label: 'Save',
+          // accelerator: 'Command '
+          click: () => this.saveTemplateDialog()
+        },
+        {
+          label: 'Open',
+          click: () => this.openTemplateDialog()
         }
       ]
     };
@@ -300,7 +329,8 @@ export default class MenuBuilder {
       subMenuEdit,
       subMenuView,
       subMenuWindow,
-      subMenuHelp
+      subMenuHelp,
+      templateMenu
     ];
   }
 
@@ -312,12 +342,12 @@ export default class MenuBuilder {
           {
             label: '&Open definitions',
             accelerator: 'Ctrl + Shift + O',
-            click: () => this.openDialog()
+            click: () => this.openDialog(FUNCTIONS_DEF_LOAD)
           },
           {
             label: '&Open',
             accelerator: 'Ctrl + O',
-            click: () => this.openFileDialog()
+            click: () => this.openFileDialog(FILE_OPENED)
           },
           {
             label: '&Close',
@@ -329,7 +359,7 @@ export default class MenuBuilder {
           {
             label: '&Save',
             accelerator: 'Ctrl+S',
-            click: () => this.saveDialog()
+            click: () => this.saveDialog(REQUEST_DATA_TO_SAVE)
           }
         ]
       },
@@ -402,6 +432,20 @@ export default class MenuBuilder {
             click() {
               shell.openExternal('https://github.com/atom/electron/issues');
             }
+          }
+        ]
+      },
+      {
+        label: 'Template',
+        submenu: [
+          {
+            label: 'Save',
+            // accelerator: 'Command '
+            click: () => this.saveTemplateDialog()
+          },
+          {
+            label: 'Open',
+            click: () => this.openTemplateDialog()
           }
         ]
       }

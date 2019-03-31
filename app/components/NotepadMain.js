@@ -13,7 +13,8 @@ import {
   SEND_DATA_TO_SAVE,
   FILE_OPENED,
   NOTEPAD_UNMOUNT,
-  DELIMITER_CHANGE_RECEIVE
+  DELIMITER_CHANGE_RECEIVE,
+  TEMPLATE_OPENED
 } from '../constants/constants';
 // import { t } from 'testcafe';
 
@@ -61,7 +62,7 @@ class NotepadMain extends Component<Props> {
     super(props);
     this.state = {
       prevDate: new Date(),
-      text: '',
+      text: "",
       focusedFunction: {
         focusedVarNo: undefined
       },
@@ -87,7 +88,11 @@ class NotepadMain extends Component<Props> {
     ipcRenderer.on(DELIMITER_CHANGE_RECEIVE, (event, data) => {
       this.onDelimiterChange(data);
     });
-  }
+
+    ipcRenderer.on(TEMPLATE_OPENED, (event, data) => {
+      this.loadTemplate(data);
+    })
+  };
 
   componentDidMount = () => {
     ipcRenderer.send(CATCH_ON_MAIN, 'ping');
@@ -108,6 +113,10 @@ class NotepadMain extends Component<Props> {
     console.log('Request', data);
     ipcRenderer.send(SEND_DATA_TO_SAVE, data);
   };
+
+  loadTemplate = data => {
+    console.log(data)
+  }
 
   findFun = funBegin => element =>
     element.name.toUpperCase() === funBegin.toUpperCase();
@@ -220,7 +229,6 @@ class NotepadMain extends Component<Props> {
         varCounter = 0;
       } else {
         const splittedByDelimiter = line.split(this.state.delimiter);
-        console.log(splittedByDelimiter);
         let tempLen = currentLineStart;
 
         splittedByDelimiter.forEach(elem => {
@@ -240,17 +248,12 @@ class NotepadMain extends Component<Props> {
 
     this.setState({
       focusedFunction: currentFocused
-      // currentTextValue: currentValue
     });
   };
 
   render() {
     const { classes } = this.props;
-    // const { textValue } = this.state.text !== undefined ? this.state.text : ''
     let textValue = this.state.text;
-    if (textValue === undefined) {
-      textValue = '';
-    }
 
     let functionDescriptor = <div />;
 

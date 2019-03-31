@@ -113,7 +113,7 @@ FunctionDescriptor.propTypes = {
   focused: PropTypes.bool.isRequired,
   definition: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
-  focusedVarNo: PropTypes.number.isRequired
+  focusedVarNo: PropTypes.number
 };
 
 export default withStyles(styles)(FunctionDescriptor);

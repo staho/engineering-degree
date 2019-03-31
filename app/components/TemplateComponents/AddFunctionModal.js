@@ -82,14 +82,17 @@ class AddFunctionModal extends Component {
   };
 
   handleCancel = () => {
-    this.setState({
-      functionName: '',
-      functionDesc: '',
-      functionVariables: [],
-      step: 0,
-      noOfRows: 0,
-      noOfVarsInRow: 0
-    }, this.props.handleClose());
+    this.setState(
+      {
+        functionName: '',
+        functionDesc: '',
+        functionVariables: [],
+        step: 0,
+        noOfRows: 0,
+        noOfVarsInRow: 0
+      },
+      this.props.handleClose({ isCanceled: true })
+    );
   };
 
   render() {
@@ -136,9 +139,6 @@ class AddFunctionModal extends Component {
             <Button onClick={this.handleCancel} color="primary">
               Cancel
             </Button>
-            {/* Add save/cancel button + handler */}
-
-            {/* change this to sth that works */}
             {saveNextButtonLabel}
           </DialogActions>
         </Dialog>

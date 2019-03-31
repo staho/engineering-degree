@@ -115,6 +115,8 @@ app.on('ready', async () => {
     mainWindow.webContents.send(DELIMITER_CHANGE_RECEIVE, arg);
   });
 
+  // ipcMain.on()
+
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
   menuBuilder.createAppDataFolder();
