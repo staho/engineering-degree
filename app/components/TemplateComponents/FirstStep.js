@@ -62,7 +62,7 @@ class FirstStep extends Component {
             required
             margin="normal"
             id="noOfRows"
-            label="No of var rows"
+            label="Number of var rows"
             type="number"
             className={classes.textFieldDetail}
             onChange={this.handleChange}
@@ -71,7 +71,7 @@ class FirstStep extends Component {
             required
             margin="normal"
             id="noOfVarsInRow"
-            label="No of vars in row"
+            label="Number of vars in row"
             type="number"
             className={classes.textFieldDetail}
             onChange={this.handleChange}

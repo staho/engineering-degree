@@ -70,6 +70,7 @@ class NotepadMain extends Component<Props> {
     };
 
     ipcRenderer.on(FUNCTIONS_DEF_LOAD, (event, data) => {
+      //todo: in data send parameter to distinct is that functions_def or template
       const parsedFunDefs = JSON.parse(data);
       this.setState({ functionsDef: parsedFunDefs });
     });

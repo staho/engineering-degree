@@ -21,48 +21,57 @@ const styles = theme => ({
   }
 });
 
-
 class NextStep extends Component {
+  handleChange = (noOfVar, type) => event => {
+    const text = event.target.value;
 
-    handleVarNameChange = noOfVar => event => {};
+    let smallEvent = {
+      type: type,
+      noOfVar: noOfVar,
+      text: text
+    };
 
-    handleVarDescChange = noOfVar => event => {};
+    this.props.handleChange(smallEvent);
+  };
 
-    createFields = (noOfVars, classes) => {
-        const vars = [];
-        for (let i = 0; i < noOfVars; i += 1) {
-          vars.push(
-            <div key={`variable-definition-${this.props.stepNo}-${i}`} className={classes.container}>
-              <TextField
-                autoFocus
-                required
-                margin="normal"
-                id="name"
-                label="Variable name"
-                type="text"
-                className={classes.textFieldDetail}
-                onChange={this.handleVarNameChange(i)}
-              />
-              <TextField
-                margin="normal"
-                id="desc"
-                label="Description"
-                type="text"
-                multiline
-                className={classes.textFieldDetail}
-                onChange={this.handleVarDescChange(i)}
-              />
-            </div>
-          );
-        }
-        return vars;
-      };
+  createFields = (noOfVars, classes) => {
+    const vars = [];
+    for (let i = 0; i < noOfVars; i += 1) {
+      vars.push(
+        <div
+          key={`variable-definition-${this.props.stepNo}-${i}`}
+          className={classes.container}
+        >
+          <TextField
+            autoFocus
+            required
+            margin="normal"
+            id="name"
+            label="Variable name"
+            type="text"
+            className={classes.textFieldDetail}
+            onChange={this.handleChange(i, 'name')}
+          />
+          <TextField
+            margin="normal"
+            id="desc"
+            label="Description"
+            type="text"
+            multiline
+            className={classes.textFieldDetail}
+            onChange={this.handleChange(i, 'desc')}
+          />
+        </div>
+      );
+    }
+    return vars;
+  };
 
   render() {
     const { classes } = this.props;
     const { stepNo } = this.props;
     const { noOfVars } = this.props;
-    console.log(noOfVars)
+    // console.log(noOfVars);
 
     return (
       <DialogContent>
@@ -72,7 +81,7 @@ class NextStep extends Component {
         {/* {} */}
 
         {/* <div className={classes.container}> */}
-          {this.createFields(noOfVars, classes)}
+        {this.createFields(noOfVars, classes)}
         {/* </div> */}
       </DialogContent>
     );

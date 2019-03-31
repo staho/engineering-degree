@@ -113,17 +113,6 @@ class FunBrowser extends Component<Props> {
         )
           return <div />;
 
-        // <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-        //       <Typography className={classes.heading}>{fun.name}</Typography>
-        //       {fun.desc ? (
-        //         <Typography className={classes.secondaryHeading}>
-        //           {fun.desc}
-        //         </Typography>
-        //       ) : (
-        //         <div />
-        //       )}
-        //     </ExpansionPanelSummary>
-
         return (
           <FunctionDescriptor
             key={`function-descriptor-panel-${index}`}

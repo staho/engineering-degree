@@ -16,7 +16,13 @@ const styles = theme => ({
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular
+    fontWeight: theme.typography.fontWeightRegular,
+    flexBasis: '33.33%',
+    flexShrink: 0
+  },
+  secondaryHeading: {
+    fontSize: theme.typography.pxToRem(15),
+    color: theme.palette.text.secondary
   }
 });
 
@@ -33,6 +39,7 @@ class FunctionDescriptor extends React.Component {
     const { definition } = this.props;
     const { focusedVarNo } = this.props;
     const { expanded } = this.props;
+    const { desc } = this.props.definition;
     let expandIcon = <div />;
     if(this.props.expandIcon) {
       expandIcon = this.props.expandIcon;
@@ -84,6 +91,13 @@ class FunctionDescriptor extends React.Component {
           >
             {text}
           </Typography>
+               {desc ? (
+                 <Typography className={classes.secondaryHeading}>
+                   {desc}
+                 </Typography>
+               ) : (
+                 <div />
+               )}
         </ExpansionPanelSummary>
 
         <ExpansionPanelDetails>
