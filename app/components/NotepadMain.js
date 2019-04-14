@@ -14,7 +14,8 @@ import {
   FILE_OPENED,
   NOTEPAD_UNMOUNT,
   DELIMITER_CHANGE_RECEIVE,
-  TEMPLATE_OPENED
+  TEMPLATE_OPENED,
+  RENDER_TEMPLATE
 } from '../constants/constants';
 // import { t } from 'testcafe';
 
@@ -62,12 +63,13 @@ class NotepadMain extends Component<Props> {
     super(props);
     this.state = {
       prevDate: new Date(),
-      text: "",
+      text: '',
       focusedFunction: {
         focusedVarNo: undefined
       },
       openRoutesDrawer: false,
-      delimiter: '\t'
+      delimiter: '\t',
+      functionsDef: {}
     };
 
     ipcRenderer.on(FUNCTIONS_DEF_LOAD, (event, data) => {
@@ -91,14 +93,17 @@ class NotepadMain extends Component<Props> {
 
     ipcRenderer.on(TEMPLATE_OPENED, (event, data) => {
       this.loadTemplate(data);
-    })
-  };
+    });
+  }
 
   componentDidMount = () => {
     ipcRenderer.send(CATCH_ON_MAIN, 'ping');
+    console.log("mount")
+
   };
 
   componentWillUnmount = () => {
+    console.log("unmount")
     const data = {
       text: this.state.currentTextValue
     };
@@ -115,8 +120,21 @@ class NotepadMain extends Component<Props> {
   };
 
   loadTemplate = data => {
-    console.log(data)
-  }
+    const templateFunctions = data.template;
+    this.setState({ functionsDef: { functions: templateFunctions } });
+    let textValue = '';
+
+    templateFunctions.forEach(fun => {
+      let singleFunction = `*${fun.name.toUpperCase()}\n`;
+      fun.variables.forEach(() => (singleFunction += '\n'));
+
+      textValue += singleFunction;
+    });
+
+    console.log(textValue)
+    this.setState({text: textValue}, () => {console.log(this.state)})
+    console.log(data.template);
+  };
 
   findFun = funBegin => element =>
     element.name.toUpperCase() === funBegin.toUpperCase();

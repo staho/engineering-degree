@@ -19,7 +19,9 @@ import {
   FUNCTIONS_DEF_LOAD,
   FILE_OPENED,
   DELIMITER_CHANGE_RECEIVE,
-  DELIMITER_CHANGE_SEND
+  DELIMITER_CHANGE_SEND,
+  EXPORT_TEMPLATE_TO_RENDER,
+  TEMPLATE_OPENED
 } from './constants/constants';
 
 export default class AppUpdater {
@@ -106,9 +108,20 @@ app.on('ready', async () => {
     console.log(definitionData, arg);
     console.log(mainWindow.tempMem.text);
 
+    const tempMem = mainWindow.tempMem;
+
     mainWindow.webContents.send(FUNCTIONS_DEF_LOAD, definitionData);
-    mainWindow.webContents.send(FILE_OPENED, mainWindow.tempMem.text);
+    mainWindow.webContents.send(FILE_OPENED, tempMem);
   });
+
+  ipcMain.on(EXPORT_TEMPLATE_TO_RENDER, (event, arg) => {
+    const templateExport = {
+      template: arg,
+      isOpened: false
+    }
+    mainWindow.tempMem.functionsTemplate = arg;
+    mainWindow.webContents.send(TEMPLATE_OPENED, templateExport);
+  })
 
   ipcMain.on(DELIMITER_CHANGE_SEND, (event, arg) => {
     console.log(arg);

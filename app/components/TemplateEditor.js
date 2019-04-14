@@ -8,12 +8,15 @@ import AppBarDefem from './AppBarDefem';
 import AddFunctionModal from './TemplateComponents/AddFunctionModal';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { ipcRenderer } from 'electron';
+import { Link } from 'react-router-dom';
 import FunctionDescriptor from './NotepadComponents/FunctionDescriptor';
 import {
   TEMPLATE_OPENED,
   REQUEST_TEMPLATE_TO_SAVE,
-  SEND_DATA_TO_SAVE
+  SEND_DATA_TO_SAVE,
+  EXPORT_TEMPLATE_TO_RENDER
 } from '../constants/constants';
+import routes from '../constants/routes';
 
 const styles = theme => ({
   root: {
@@ -62,23 +65,26 @@ class TemplateEditor extends Component<Props> {
     };
 
     ipcRenderer.on(TEMPLATE_OPENED, (event, data) => {
-      let jsData = JSON.parse(data)
-      this.loadTemplate(jsData);
-    })
+      console.log(data);
+      if (data.isOpened) {
+        let jsData = JSON.parse(data);
+        this.loadTemplate(jsData);
+      }
+    });
 
     ipcRenderer.on(REQUEST_TEMPLATE_TO_SAVE, (event, data) => {
-      const path = data
-      this.prepareAndSendTemplate(path)
-    })
+      const path = data;
+      this.prepareAndSendTemplate(path);
+    });
   }
 
   loadTemplate = data => {
-    console.log(data)
-    if(Array.isArray(data)) this.setState({functions: data})
-  }
+    console.log(data);
+    if (Array.isArray(data)) this.setState({ functions: data });
+  };
 
   prepareAndSendTemplate = path => {
-    let jsonFunctions = JSON.stringify(this.state.functions)
+    let jsonFunctions = JSON.stringify(this.state.functions);
 
     const data = {
       text: jsonFunctions,
@@ -86,7 +92,7 @@ class TemplateEditor extends Component<Props> {
     };
     console.log('Request', data);
     ipcRenderer.send(SEND_DATA_TO_SAVE, data);
-  }
+  };
 
   onRoutesDrawerClose = () => {
     this.setState({ openRoutesDrawer: false });
@@ -96,6 +102,12 @@ class TemplateEditor extends Component<Props> {
     this.setState({
       expanded: expanded ? panel : false
     });
+  };
+
+  handleExportClick = () => {
+    const dataToExport = this.state.functions;
+
+    ipcRenderer.send(EXPORT_TEMPLATE_TO_RENDER, dataToExport);
   };
 
   onOpenRoutesDrawer = () => {
@@ -109,13 +121,12 @@ class TemplateEditor extends Component<Props> {
   onFunctionModalClose = smallEvent => {
     let tempFunctions = [...this.state.functions];
     console.log(smallEvent);
-    if(smallEvent.isCanceled) {
-      this.setState({modalOpen: false})
+    if (smallEvent.isCanceled) {
+      this.setState({ modalOpen: false });
     } else {
       tempFunctions.push(smallEvent.function); //add check if var is already in state
       this.setState({ modalOpen: false, functions: tempFunctions });
     }
-   
   };
 
   createFunctionDescriptors = expanded => {
@@ -149,15 +160,21 @@ class TemplateEditor extends Component<Props> {
           open={this.state.openRoutesDrawer}
           onClose={this.onRoutesDrawerClose}
         />
-        <div className={classes.panels}>{this.createFunctionDescriptors(expanded)}</div>
-       
+        <div className={classes.panels}>
+          {this.createFunctionDescriptors(expanded)}
+        </div>
 
         <AddFunctionModal
           open={this.state.modalOpen}
           handleClose={this.onFunctionModalClose}
         />
-         <Fab className={classes.fab2} onClick={this.onFunctionModalOpen}>
-          <PlaylistAddCheckIcon className={classes.myButton} color='primary'/>
+        <Fab className={classes.fab2} onClick={this.handleExportClick}>
+          <Link to={routes.NOTEPAD}>
+            <PlaylistAddCheckIcon
+              className={classes.myButton}
+              color="primary"
+            />
+          </Link>
         </Fab>
         <Fab className={classes.fab} onClick={this.onFunctionModalOpen}>
           <AddIcon className={classes.myButton} />
