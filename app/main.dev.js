@@ -21,7 +21,8 @@ import {
   DELIMITER_CHANGE_RECEIVE,
   DELIMITER_CHANGE_SEND,
   EXPORT_TEMPLATE_TO_RENDER,
-  TEMPLATE_OPENED
+  TEMPLATE_OPENED,
+  CATCH_ON_TEMPLATE
 } from './constants/constants';
 
 export default class AppUpdater {
@@ -80,8 +81,8 @@ app.on('ready', async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1024,
-    height: 728
+    width: 1600,
+    height: 800
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
@@ -104,10 +105,25 @@ app.on('ready', async () => {
     mainWindow = null;
   });
 
+  ipcMain.on(CATCH_ON_TEMPLATE, (event, arg) => {
+    console.log(definitionData, arg);
+    // tempMem: {
+    //   text: "Bla", //temptext from editor
+    //   functionsTemplate: {} //obj with a function template
+    // }
+    let template = mainWindow.tempMem.functionsTemplate;
+    if(template) template.isOpened = true;
+    mainWindow.webContents.send(TEMPLATE_OPENED, template);
+  });
+
+
   ipcMain.on(CATCH_ON_MAIN, (event, arg) => {
     console.log(definitionData, arg);
     console.log(mainWindow.tempMem.text);
-
+    // tempMem: {
+    //   text: "Bla", //temptext from editor
+    //   functionsTemplate: {} //obj with a function template
+    // }
     const tempMem = mainWindow.tempMem;
 
     mainWindow.webContents.send(FUNCTIONS_DEF_LOAD, definitionData);
@@ -119,6 +135,7 @@ app.on('ready', async () => {
       template: arg,
       isOpened: false
     }
+
     mainWindow.tempMem.functionsTemplate = arg;
     mainWindow.webContents.send(TEMPLATE_OPENED, templateExport);
   })

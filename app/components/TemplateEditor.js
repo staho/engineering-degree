@@ -14,7 +14,9 @@ import {
   TEMPLATE_OPENED,
   REQUEST_TEMPLATE_TO_SAVE,
   SEND_DATA_TO_SAVE,
-  EXPORT_TEMPLATE_TO_RENDER
+  EXPORT_TEMPLATE_TO_RENDER,
+  FILE_OPENED,
+  CATCH_ON_TEMPLATE
 } from '../constants/constants';
 import routes from '../constants/routes';
 
@@ -65,17 +67,32 @@ class TemplateEditor extends Component<Props> {
     };
 
     ipcRenderer.on(TEMPLATE_OPENED, (event, data) => {
-      console.log(data);
-      if (data.isOpened) {
+      console.log(typeof data);
+      if (typeof data === 'string') {
         let jsData = JSON.parse(data);
         this.loadTemplate(jsData);
       }
+      if(data.length) {
+        this.loadTemplate(data);
+      }
     });
+
+    ipcRenderer.on(FILE_OPENED, (event, data) => {
+      const template = data.functionsTemplate.template; 
+      if(template) {
+        console.log(template)
+      }
+    })
 
     ipcRenderer.on(REQUEST_TEMPLATE_TO_SAVE, (event, data) => {
       const path = data;
       this.prepareAndSendTemplate(path);
     });
+  }
+
+  componentDidMount = () => {
+    ipcRenderer.send(CATCH_ON_TEMPLATE, '');
+    // ipcRenderer.send(CATCH_ON_MAIN, 'template');
   }
 
   loadTemplate = data => {

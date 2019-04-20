@@ -69,16 +69,16 @@ class AddFunctionModal extends Component {
   };
 
   handleSaveClick = () => {
-    this.setState(
-      { step: 0 },
-      this.props.handleClose({
-        function: {
-          name: this.state.functionName.toUpperCase(),
-          desc: this.state.functionDesc,
-          variables: this.state.functionVariables
-        }
-      })
-    );
+    console.log(this.state.functionVariables)
+    this.props.handleClose({
+      function: {
+        name: this.state.functionName.toUpperCase(),
+        desc: this.state.functionDesc,
+        variables: this.state.functionVariables
+      }
+    })
+    this.setState({ step: 0, functionVariables: [] })
+    
   };
 
   handleCancel = () => {

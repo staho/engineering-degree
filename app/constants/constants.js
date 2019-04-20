@@ -7,6 +7,7 @@ module.exports = {
   EXPORT_TEMPLATE_TO_RENDER: 'export-template-to-render',
   RENDER_TEMPLATE: 'render-template',
   TEMPLATE_OPENED: 'template-opened',
+  CATCH_ON_TEMPLATE: 'catch-on-template',
   SEND_DATA_TO_SAVE: 'send-data-to-save',
   FILE_OPENED: 'file-opened',
   TEMPLATE_OPENED: 'template-opened',

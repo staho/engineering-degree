@@ -68,7 +68,7 @@ class NotepadMain extends Component<Props> {
         focusedVarNo: undefined
       },
       openRoutesDrawer: false,
-      delimiter: '\t',
+      delimiter: ' ',
       functionsDef: {}
     };
 
@@ -84,7 +84,12 @@ class NotepadMain extends Component<Props> {
     });
 
     ipcRenderer.on(FILE_OPENED, (event, data) => {
-      this.setState({ text: data });
+      console.log(data)
+      if(data.text) 
+        this.setState({ text: data });
+      else (data.functionsTemplate)
+        this.loadTemplate(data.functionsTemplate)
+          
     });
 
     ipcRenderer.on(DELIMITER_CHANGE_RECEIVE, (event, data) => {
@@ -92,7 +97,8 @@ class NotepadMain extends Component<Props> {
     });
 
     ipcRenderer.on(TEMPLATE_OPENED, (event, data) => {
-      this.loadTemplate(data);
+      
+      // this.loadTemplate(data);
     });
   }
 
@@ -119,12 +125,15 @@ class NotepadMain extends Component<Props> {
     ipcRenderer.send(SEND_DATA_TO_SAVE, data);
   };
 
+  //it should able to work with a data from TEMPLATE_OPEN and FILE_OPENED 
   loadTemplate = data => {
-    const templateFunctions = data.template;
-    this.setState({ functionsDef: { functions: templateFunctions } });
+    console.log("heeee", data)
+    // const templateFunctions = data.functionsTemplate;
+    const functionsDefToState = { functions: data}
+    this.setState({ functionsDef: functionsDefToState });
     let textValue = '';
 
-    templateFunctions.forEach(fun => {
+    data.forEach(fun => {
       let singleFunction = `*${fun.name.toUpperCase()}\n`;
       fun.variables.forEach(() => (singleFunction += '\n'));
 
