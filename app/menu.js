@@ -75,6 +75,12 @@ export default class MenuBuilder {
           console.error('An error occured');
         }
         this.mainWindow.webContents.send(type, data);
+        if (type === TEMPLATE_OPENED) {
+          if (!this.mainWindow.tempMem) {
+            this.mainWindow.tempMem = {};
+          }
+          this.mainWindow.tempMem.functionsTemplate = JSON.parse(data);
+        }
         // todo: save last opened files
       });
     });
@@ -92,14 +98,14 @@ export default class MenuBuilder {
   };
 
   saveTemplateDialog = () => {
-    //todo
-    console.log("Gowno dupa cycki")
+    // todo
+    console.log('Gowno dupa cycki');
     this.saveDialog(REQUEST_TEMPLATE_TO_SAVE);
   };
 
   openTemplateDialog = () => {
     this.openFileDialog(TEMPLATE_OPENED);
-    //todo
+    // todo
   };
 
   saveDataToPath = (event, data) => {

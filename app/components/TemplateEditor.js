@@ -3,19 +3,20 @@ import { withStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 import Fab from '@material-ui/core/Fab';
-import AppRoutesDrawer from './AppRoutesDrawer';
-import AppBarDefem from './AppBarDefem';
-import AddFunctionModal from './TemplateComponents/AddFunctionModal';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { ipcRenderer } from 'electron';
 import { Link } from 'react-router-dom';
+import AppRoutesDrawer from './AppRoutesDrawer';
+import AppBarDefem from './AppBarDefem';
+import AddFunctionModal from './TemplateComponents/AddFunctionModal';
 import FunctionDescriptor from './NotepadComponents/FunctionDescriptor';
 import {
-  TEMPLATE_OPENED,
   REQUEST_TEMPLATE_TO_SAVE,
   SEND_DATA_TO_SAVE,
   EXPORT_TEMPLATE_TO_RENDER,
   FILE_OPENED,
+  STORE_TEMPLATE,
+  RESTORE_TEMPLATE,
   CATCH_ON_TEMPLATE
 } from '../constants/constants';
 import routes from '../constants/routes';
@@ -66,23 +67,22 @@ class TemplateEditor extends Component<Props> {
       expanded: null
     };
 
-    ipcRenderer.on(TEMPLATE_OPENED, (event, data) => {
-      console.log(typeof data);
+    ipcRenderer.on(RESTORE_TEMPLATE, (event, data) => {
+      console.log(data);
       if (typeof data === 'string') {
-        let jsData = JSON.parse(data);
+        const jsData = JSON.parse(data);
         this.loadTemplate(jsData);
-      }
-      if(data.length) {
+      } else if (data.length) {
         this.loadTemplate(data);
       }
     });
 
     ipcRenderer.on(FILE_OPENED, (event, data) => {
-      const template = data.functionsTemplate.template; 
-      if(template) {
-        console.log(template)
+      const { template } = data.functionsTemplate;
+      if (template) {
+        console.log(template);
       }
-    })
+    });
 
     ipcRenderer.on(REQUEST_TEMPLATE_TO_SAVE, (event, data) => {
       const path = data;
@@ -93,7 +93,7 @@ class TemplateEditor extends Component<Props> {
   componentDidMount = () => {
     ipcRenderer.send(CATCH_ON_TEMPLATE, '');
     // ipcRenderer.send(CATCH_ON_MAIN, 'template');
-  }
+  };
 
   loadTemplate = data => {
     console.log(data);
@@ -101,7 +101,7 @@ class TemplateEditor extends Component<Props> {
   };
 
   prepareAndSendTemplate = path => {
-    let jsonFunctions = JSON.stringify(this.state.functions);
+    const jsonFunctions = JSON.stringify(this.state.functions);
 
     const data = {
       text: jsonFunctions,
@@ -113,6 +113,10 @@ class TemplateEditor extends Component<Props> {
 
   onRoutesDrawerClose = () => {
     this.setState({ openRoutesDrawer: false });
+  };
+
+  storeTemplates = () => {
+    ipcRenderer.send(STORE_TEMPLATE, this.state.functions);
   };
 
   handleChange = panel => (event, expanded) => {
@@ -136,13 +140,15 @@ class TemplateEditor extends Component<Props> {
   };
 
   onFunctionModalClose = smallEvent => {
-    let tempFunctions = [...this.state.functions];
+    const tempFunctions = [...this.state.functions];
     console.log(smallEvent);
     if (smallEvent.isCanceled) {
       this.setState({ modalOpen: false });
     } else {
-      tempFunctions.push(smallEvent.function); //add check if var is already in state
-      this.setState({ modalOpen: false, functions: tempFunctions });
+      tempFunctions.push(smallEvent.function); // add check if var is already in state
+      this.setState({ modalOpen: false, functions: tempFunctions }, () =>
+        this.storeTemplates()
+      );
     }
   };
 
@@ -150,7 +156,7 @@ class TemplateEditor extends Component<Props> {
     const funs = this.state.functions;
     return funs.map((fun, index) => (
       <FunctionDescriptor
-        key={`function-descriptor-panel-${index}`}
+        key={`function-descriptor-panel-${fun.name}`}
         text={fun.name}
         focused // deprecated
         expanded={expanded === `panel${index}`}

@@ -10,10 +10,11 @@ module.exports = {
   CATCH_ON_TEMPLATE: 'catch-on-template',
   SEND_DATA_TO_SAVE: 'send-data-to-save',
   FILE_OPENED: 'file-opened',
-  TEMPLATE_OPENED: 'template-opened',
   NOTEPAD_UNMOUNT: 'notepad-unmount',
   DELIMITER_CHANGE_SEND: 'delimiter-change-send',
   DELIMITER_CHANGE_RECEIVE: 'delimiter-change-receive',
+  STORE_TEMPLATE: 'store-template',
+  RESTORE_TEMPLATE: 'restore-template',
 
   DELIMITERS: [
     {

@@ -22,7 +22,9 @@ import {
   DELIMITER_CHANGE_SEND,
   EXPORT_TEMPLATE_TO_RENDER,
   TEMPLATE_OPENED,
-  CATCH_ON_TEMPLATE
+  CATCH_ON_TEMPLATE,
+  STORE_TEMPLATE,
+  RESTORE_TEMPLATE
 } from './constants/constants';
 
 export default class AppUpdater {
@@ -105,17 +107,20 @@ app.on('ready', async () => {
     mainWindow = null;
   });
 
+  ipcMain.on(STORE_TEMPLATE, (event, arg) => {
+    mainWindow.tempMem.functionsTemplate = arg;
+  });
+
   ipcMain.on(CATCH_ON_TEMPLATE, (event, arg) => {
     console.log(definitionData, arg);
     // tempMem: {
     //   text: "Bla", //temptext from editor
     //   functionsTemplate: {} //obj with a function template
     // }
-    let template = mainWindow.tempMem.functionsTemplate;
-    if(template) template.isOpened = true;
-    mainWindow.webContents.send(TEMPLATE_OPENED, template);
+    const template = mainWindow.tempMem.functionsTemplate;
+    if (template) template.isOpened = true;
+    mainWindow.webContents.send(RESTORE_TEMPLATE, template);
   });
-
 
   ipcMain.on(CATCH_ON_MAIN, (event, arg) => {
     console.log(definitionData, arg);
@@ -124,7 +129,7 @@ app.on('ready', async () => {
     //   text: "Bla", //temptext from editor
     //   functionsTemplate: {} //obj with a function template
     // }
-    const tempMem = mainWindow.tempMem;
+    const { tempMem } = mainWindow;
 
     mainWindow.webContents.send(FUNCTIONS_DEF_LOAD, definitionData);
     mainWindow.webContents.send(FILE_OPENED, tempMem);
@@ -134,11 +139,11 @@ app.on('ready', async () => {
     const templateExport = {
       template: arg,
       isOpened: false
-    }
+    };
 
     mainWindow.tempMem.functionsTemplate = arg;
     mainWindow.webContents.send(TEMPLATE_OPENED, templateExport);
-  })
+  });
 
   ipcMain.on(DELIMITER_CHANGE_SEND, (event, arg) => {
     console.log(arg);

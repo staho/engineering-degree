@@ -14,8 +14,7 @@ import {
   FILE_OPENED,
   NOTEPAD_UNMOUNT,
   DELIMITER_CHANGE_RECEIVE,
-  TEMPLATE_OPENED,
-  RENDER_TEMPLATE
+  TEMPLATE_OPENED
 } from '../constants/constants';
 // import { t } from 'testcafe';
 
@@ -73,7 +72,7 @@ class NotepadMain extends Component<Props> {
     };
 
     ipcRenderer.on(FUNCTIONS_DEF_LOAD, (event, data) => {
-      //todo: in data send parameter to distinct is that functions_def or template
+      // todo: in data send parameter to distinct is that functions_def or template
       const parsedFunDefs = JSON.parse(data);
       this.setState({ functionsDef: parsedFunDefs });
     });
@@ -84,12 +83,11 @@ class NotepadMain extends Component<Props> {
     });
 
     ipcRenderer.on(FILE_OPENED, (event, data) => {
-      console.log(data)
-      if(data.text) 
-        this.setState({ text: data });
-      else (data.functionsTemplate)
-        this.loadTemplate(data.functionsTemplate)
-          
+      console.log(data);
+      if (data.text) this.setState({ text: data });
+      else if (data.functionsTemplate) {
+        this.loadTemplate(data.functionsTemplate);
+      }
     });
 
     ipcRenderer.on(DELIMITER_CHANGE_RECEIVE, (event, data) => {
@@ -97,19 +95,26 @@ class NotepadMain extends Component<Props> {
     });
 
     ipcRenderer.on(TEMPLATE_OPENED, (event, data) => {
-      
-      // this.loadTemplate(data);
+      console.log(data);
+      if (data.template) {
+        const { template } = data;
+
+        console.log(template);
+        this.loadTemplate(template);
+      } else {
+        const tempData = JSON.parse(data);
+        this.loadTemplate(tempData);
+      }
     });
   }
 
   componentDidMount = () => {
     ipcRenderer.send(CATCH_ON_MAIN, 'ping');
-    console.log("mount")
-
+    console.log('mount');
   };
 
   componentWillUnmount = () => {
-    console.log("unmount")
+    console.log('unmount');
     const data = {
       text: this.state.currentTextValue
     };
@@ -125,24 +130,27 @@ class NotepadMain extends Component<Props> {
     ipcRenderer.send(SEND_DATA_TO_SAVE, data);
   };
 
-  //it should able to work with a data from TEMPLATE_OPEN and FILE_OPENED 
+  // it should able to work with a data from TEMPLATE_OPEN and FILE_OPENED
   loadTemplate = data => {
-    console.log("heeee", data)
+    // console.log('heeee', data);
     // const templateFunctions = data.functionsTemplate;
-    const functionsDefToState = { functions: data}
+    const functionsDefToState = { functions: data };
     this.setState({ functionsDef: functionsDefToState });
     let textValue = '';
+    if (data) {
+      data.forEach(fun => {
+        let singleFunction = `*${fun.name.toUpperCase()}\n`;
+        fun.variables.forEach(() => (singleFunction += '\n'));
 
-    data.forEach(fun => {
-      let singleFunction = `*${fun.name.toUpperCase()}\n`;
-      fun.variables.forEach(() => (singleFunction += '\n'));
+        textValue += singleFunction;
+      });
+    }
 
-      textValue += singleFunction;
+    console.log(textValue);
+    this.setState({ text: textValue }, () => {
+      console.log(this.state);
     });
-
-    console.log(textValue)
-    this.setState({text: textValue}, () => {console.log(this.state)})
-    console.log(data.template);
+    // console.log(data.template);
   };
 
   findFun = funBegin => element =>
@@ -215,7 +223,7 @@ class NotepadMain extends Component<Props> {
   };
 
   processChange = event => {
-    console.log(this.state.delimiter.toString());
+    // console.log(this.state.delimiter.toString());
     const currentValue = event.target.value;
     if (!currentValue || !this.state.functionsDef) return;
 
@@ -280,7 +288,7 @@ class NotepadMain extends Component<Props> {
 
   render() {
     const { classes } = this.props;
-    let textValue = this.state.text;
+    const textValue = this.state.text;
 
     let functionDescriptor = <div />;
 
