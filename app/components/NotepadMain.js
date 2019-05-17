@@ -84,7 +84,7 @@ class NotepadMain extends Component<Props> {
 
     ipcRenderer.on(FILE_OPENED, (event, data) => {
       console.log(data);
-      if (data.text) this.setState({ text: data });
+      if (data.text) this.setState({ text: data.text });
       else if (data.functionsTemplate) {
         this.loadTemplate(data.functionsTemplate);
       }
@@ -123,7 +123,7 @@ class NotepadMain extends Component<Props> {
 
   prepareAndSendData = path => {
     const data = {
-      text: this.state.currentTextValue,
+      text: this.state.text,
       path
     };
     console.log('Request', data);
@@ -232,6 +232,8 @@ class NotepadMain extends Component<Props> {
 
     let varCounter = 0;
 
+    let lineOfVars = 0;
+
     let currentFocused = {};
 
     let tempFocused = {};
@@ -252,6 +254,7 @@ class NotepadMain extends Component<Props> {
             text: foundDefinition.name,
             definition: foundDefinition,
             focusedVarNo: null,
+            focusedVarLineNo: null,
             functionEnd: lineEnd,
             functionStart: currentLineStart,
             variables: []
@@ -262,6 +265,7 @@ class NotepadMain extends Component<Props> {
           }
         }
         varCounter = 0;
+        lineOfVars = 0;
       } else {
         const splittedByDelimiter = line.split(this.state.delimiter);
         let tempLen = currentLineStart;
@@ -273,14 +277,18 @@ class NotepadMain extends Component<Props> {
             event.target.selectionStart <= tempLen + elem.length
           ) {
             currentFocused.focusedVarNo = varCounter;
+            currentFocused.focusedVarLineNo = lineOfVars;
           }
           tempLen += elem.length + 1; // +1 for delimiter
         });
+        lineOfVars += 1;
+        varCounter = 0;
       }
 
       currentLineStart += line.length + 1; // +1 is a \n
     });
 
+    console.log("Var line: ", currentFocused.focusedVarLineNo, " var no: ", currentFocused.focusedVarNo)
     this.setState({
       focusedFunction: currentFocused
     });
@@ -302,6 +310,7 @@ class NotepadMain extends Component<Props> {
           focused // deprecated
           definition={tempFocusedFunction.definition}
           focusedVarNo={tempFocusedFunction.focusedVarNo}
+          focusedVarLineNo={tempFocusedFunction.focusedVarLineNo}
           expanded
         />
       );

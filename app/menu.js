@@ -74,8 +74,14 @@ export default class MenuBuilder {
         if (err) {
           console.error('An error occured');
         }
-        this.mainWindow.webContents.send(type, data);
+        if (type === FILE_OPENED) {
+          const obj = { text: data };
+          // data.text = data;
+          this.mainWindow.webContents.send(type, obj);
+        }
         if (type === TEMPLATE_OPENED) {
+          this.mainWindow.webContents.send(type, data);
+
           if (!this.mainWindow.tempMem) {
             this.mainWindow.tempMem = {};
           }
@@ -110,6 +116,7 @@ export default class MenuBuilder {
 
   saveDataToPath = (event, data) => {
     // console.log(data.path, data.saveToFile);
+    if(!data.path) return;
     fs.writeFileSync(data.path, data.text);
   };
 

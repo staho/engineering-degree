@@ -38,6 +38,7 @@ class FunctionDescriptor extends React.Component {
     const { focused } = this.props;
     const { definition } = this.props;
     const { focusedVarNo } = this.props;
+    const { focusedVarLineNo } = this.props;
     const { expanded } = this.props;
     const { desc } = this.props.definition;
     let expandIcon = <div />;
@@ -45,18 +46,19 @@ class FunctionDescriptor extends React.Component {
       expandIcon = this.props.expandIcon;
     }
     
-    let enumerate = 1;
+    let enumerateVars = 1;
+    let enumerateLines = 0;
 
     const variables = [];
     if(expanded){
     definition.variables.forEach(arrOfVariables => {
       arrOfVariables.forEach(variable => {
         variables.push(
-          <ListItem key={`function-list-item-${enumerate}`}>
+          <ListItem key={`function-list-item-${variable.name}`}>
             <ListItemText disableTypography>
               <Typography
                 gutterBottom
-                color={enumerate === focusedVarNo ? 'error' : 'default'}
+                color={enumerateVars === focusedVarNo && enumerateLines === focusedVarLineNo ? 'error' : 'default'}
               >
                 <Typography
                   component="span"
@@ -68,15 +70,19 @@ class FunctionDescriptor extends React.Component {
             </ListItemText>
           </ListItem>
         );
-        enumerate += 1;
+        enumerateVars += 1;
+        // console.log(enumerateVars, )
       });
       const lengthOfVars = definition.variables.length;
       if (
         lengthOfVars > 1 &&
         definition.variables[lengthOfVars - 1] !== arrOfVariables
       ) {
-        variables.push(<Divider key={`divider-${enumerate}`} />);
+        variables.push(<Divider key={`divider-${enumerateVars}${enumerateLines}`} />);
       }
+      enumerateVars = 1;
+      enumerateLines += 1;
+      // todo: if enumerateVars or lines are greater than variable matrix dimmensions, throw error on GUI
     });
   }
 
