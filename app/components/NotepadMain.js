@@ -146,9 +146,9 @@ class NotepadMain extends Component<Props> {
       });
     }
 
-    console.log(textValue);
+    // console.log(textValue);
     this.setState({ text: textValue }, () => {
-      console.log(this.state);
+      // console.log(this.state);
     });
     // console.log(data.template);
   };
@@ -257,6 +257,7 @@ class NotepadMain extends Component<Props> {
             focusedVarLineNo: null,
             functionEnd: lineEnd,
             functionStart: currentLineStart,
+            valuesOfLine: [],
             variables: []
           };
 
@@ -281,6 +282,7 @@ class NotepadMain extends Component<Props> {
           }
           tempLen += elem.length + 1; // +1 for delimiter
         });
+     
         lineOfVars += 1;
         varCounter = 0;
       }
@@ -288,8 +290,7 @@ class NotepadMain extends Component<Props> {
       currentLineStart += line.length + 1; // +1 is a \n
     });
 
-    console.log("Var line: ", currentFocused.focusedVarLineNo, " var no: ", currentFocused.focusedVarNo)
-    this.setState({
+        this.setState({
       focusedFunction: currentFocused
     });
   };
@@ -311,6 +312,7 @@ class NotepadMain extends Component<Props> {
           definition={tempFocusedFunction.definition}
           focusedVarNo={tempFocusedFunction.focusedVarNo}
           focusedVarLineNo={tempFocusedFunction.focusedVarLineNo}
+          valuesOfLine={tempFocusedFunction.valuesOfLine}
           expanded
         />
       );

@@ -71,8 +71,28 @@ class FunctionDescriptor extends React.Component {
           </ListItem>
         );
         enumerateVars += 1;
-        // console.log(enumerateVars, )
       });
+      if(focusedVarNo > arrOfVariables.length && enumerateLines === focusedVarLineNo) {
+        variables.push(
+          <ListItem>
+            <ListItemText disableTypography>
+              <Typography
+                gutterBottom
+                color='error'
+              >
+                <Typography
+                  component="span"
+                  variant="subtitle2"
+                  color='error'
+                  gutterBottom
+                >{`ZA DUŻO ZMIENNYCH`}</Typography>
+                {`Została wprowadzona za duża ilość zmiennych dla zadanej funkcji. Usuń wartości które nie zostały zadeklarowe w definicji.`}
+              </Typography>
+            </ListItemText>
+          </ListItem>
+        );
+      }
+
       const lengthOfVars = definition.variables.length;
       if (
         lengthOfVars > 1 &&
