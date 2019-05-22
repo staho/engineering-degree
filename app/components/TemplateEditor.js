@@ -68,7 +68,6 @@ class TemplateEditor extends Component<Props> {
     };
 
     ipcRenderer.on(RESTORE_TEMPLATE, (event, data) => {
-      console.log(data);
       if (typeof data === 'string') {
         const jsData = JSON.parse(data);
         this.loadTemplate(jsData);
@@ -79,9 +78,6 @@ class TemplateEditor extends Component<Props> {
 
     ipcRenderer.on(FILE_OPENED, (event, data) => {
       const { template } = data.functionsTemplate;
-      if (template) {
-        console.log(template);
-      }
     });
 
     ipcRenderer.on(REQUEST_TEMPLATE_TO_SAVE, (event, data) => {
@@ -96,7 +92,6 @@ class TemplateEditor extends Component<Props> {
   };
 
   loadTemplate = data => {
-    console.log(data);
     if (Array.isArray(data)) this.setState({ functions: data });
   };
 
@@ -107,7 +102,6 @@ class TemplateEditor extends Component<Props> {
       text: jsonFunctions,
       path
     };
-    console.log('Request', data);
     ipcRenderer.send(SEND_DATA_TO_SAVE, data);
   };
 
@@ -141,7 +135,6 @@ class TemplateEditor extends Component<Props> {
 
   onFunctionModalClose = smallEvent => {
     const tempFunctions = [...this.state.functions];
-    console.log(smallEvent);
     if (smallEvent.isCanceled) {
       this.setState({ modalOpen: false });
     } else {

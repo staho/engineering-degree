@@ -22,6 +22,38 @@ const styles = theme => ({
 });
 
 class NextStep extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      fieldValues: {},
+      stepNo: null
+    };
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let temp = {};
+    if (nextProps.stepNo !== prevState.stepNo) {
+      if (nextProps.values) {
+        nextProps.values.forEach((elem, index) => {
+          temp[`noOfVar-${index}-type-name`] = {
+            text: elem.name,
+            noOfVar: index,
+            type: 'name'
+          };
+          temp[`noOfVar-${index}-type-desc`] = {
+            text: elem.desc,
+            noOfVar: index,
+            type: 'name'
+          };
+        });
+      }
+      return {
+        fieldValues: { ...temp },
+        stepNo: nextProps.stepNo
+      };
+    } else return null;
+  }
+
   handleChange = (noOfVar, type) => event => {
     const text = event.target.value;
 
@@ -32,11 +64,17 @@ class NextStep extends Component {
     };
 
     this.props.handleChange(smallEvent);
+
+    let tempState = { ...this.state.fieldValues };
+    tempState[`noOfVar-${noOfVar}-type-${type}`] = smallEvent;
+    this.setState({ fieldValues: tempState });
   };
 
   createFields = (noOfVars, classes) => {
     const vars = [];
     for (let i = 0; i < noOfVars; i += 1) {
+      let val1 = this.state.fieldValues[`noOfVar-${i}-type-name`];
+      let val2 = this.state.fieldValues[`noOfVar-${i}-type-desc`];
       vars.push(
         <div
           key={`variable-definition-${this.props.stepNo}-${i}`}
@@ -49,6 +87,7 @@ class NextStep extends Component {
             id="name"
             label="Variable name"
             type="text"
+            value={val1 === undefined ? '' : val1.text}
             className={classes.textFieldDetail}
             onChange={this.handleChange(i, 'name')}
           />
@@ -58,6 +97,7 @@ class NextStep extends Component {
             label="Description"
             type="text"
             multiline
+            value={val2 === undefined ? '' : val2.text}
             className={classes.textFieldDetail}
             onChange={this.handleChange(i, 'desc')}
           />

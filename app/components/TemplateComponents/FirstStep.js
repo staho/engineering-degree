@@ -22,8 +22,29 @@ const styles = theme => ({
 });
 
 class FirstStep extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      functionDesc: "",
+      functionName: "",
+      noOfRows: "",
+      noOfVarsInRow: "" 
+    }
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if(nextProps.values) {
+      return nextProps.values
+    }
+    return null;
+  }
+
   handleChange = event => {
     this.props.handleChange({ [event.target.id]: event.target.value });
+    let tempState = {...this.state}
+    tempState[event.target.id] = event.target.value
+    this.setState(tempState)
   };
 
   render() {
@@ -44,6 +65,7 @@ class FirstStep extends Component {
             label="Function name"
             type="text"
             fullWidth
+            value={this.state.functionName}
             className={classes.textFieldMain}
             onChange={this.handleChange}
           />
@@ -54,6 +76,7 @@ class FirstStep extends Component {
             label="Function description"
             type="text"
             fullWidth
+            value={this.state.functionDesc}
             className={classes.textFieldMain}
             onChange={this.handleChange}
           />
@@ -64,6 +87,7 @@ class FirstStep extends Component {
             id="noOfRows"
             label="Number of var rows"
             type="number"
+            value={this.state.noOfRows}
             className={classes.textFieldDetail}
             onChange={this.handleChange}
           />
@@ -73,6 +97,7 @@ class FirstStep extends Component {
             id="noOfVarsInRow"
             label="Number of vars in row"
             type="number"
+            value={this.state.noOfVarsInRow}
             className={classes.textFieldDetail}
             onChange={this.handleChange}
           />

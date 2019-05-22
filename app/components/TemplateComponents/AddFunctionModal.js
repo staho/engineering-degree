@@ -52,8 +52,6 @@ class AddFunctionModal extends Component {
   };
 
   handleNextClick = event => {
-    console.log(this.state.step);
-    console.log();
     const option = event.target.textContent;
     const currentStep = this.state.step;
 
@@ -65,20 +63,26 @@ class AddFunctionModal extends Component {
   };
 
   handleBackClick = () => {
-    // TODO
+    const currentStep = this.state.step;
+    this.setState({ step: currentStep - 1 });
   };
 
   handleSaveClick = () => {
-    console.log(this.state.functionVariables)
     this.props.handleClose({
       function: {
         name: this.state.functionName.toUpperCase(),
         desc: this.state.functionDesc,
         variables: this.state.functionVariables
       }
-    })
-    this.setState({ step: 0, functionVariables: [] })
-    
+    });
+    this.setState({
+      functionName: '',
+      functionDesc: '',
+      functionVariables: [],
+      step: 0,
+      noOfRows: 0,
+      noOfVarsInRow: 0
+    });
   };
 
   handleCancel = () => {
@@ -95,9 +99,22 @@ class AddFunctionModal extends Component {
     );
   };
 
+  getFirstStepValues = () => {
+    const state = { ...this.state };
+
+    return {
+      functionDesc: state.functionDesc,
+      functionName: state.functionName,
+      noOfRows: state.noOfRows,
+      noOfVarsInRow: state.noOfVarsInRow
+    };
+  };
+
   render() {
     const { classes } = this.props;
     const { open } = this.props;
+    let nextStepValues = this.state.functionVariables[this.state.step - 1];
+    let firsStepValues = this.getFirstStepValues();
 
     let saveNextButtonLabel = (
       <Button onClick={this.handleNextClick} color="primary">
@@ -106,7 +123,10 @@ class AddFunctionModal extends Component {
     );
 
     let currentStepComponent = (
-      <FirstStep handleChange={this.handleFirstStepChanges} />
+      <FirstStep
+        handleChange={this.handleFirstStepChanges}
+        values={firsStepValues}
+      />
     );
     if (this.state.step !== 0 && this.state.step <= this.state.noOfRows) {
       currentStepComponent = (
@@ -114,6 +134,7 @@ class AddFunctionModal extends Component {
           stepNo={this.state.step}
           handleChange={this.handleNextStepChanges(this.state.step)}
           noOfVars={this.state.noOfVarsInRow}
+          values={nextStepValues}
         />
       );
     }
@@ -138,6 +159,9 @@ class AddFunctionModal extends Component {
           <DialogActions>
             <Button onClick={this.handleCancel} color="primary">
               Cancel
+            </Button>
+            <Button onClick={this.handleBackClick} color="primary">
+              Back
             </Button>
             {saveNextButtonLabel}
           </DialogActions>
