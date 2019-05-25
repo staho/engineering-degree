@@ -16,7 +16,6 @@ import {
   DELIMITER_CHANGE_RECEIVE,
   TEMPLATE_OPENED
 } from '../constants/constants';
-// import { t } from 'testcafe';
 
 const drawerWidth = 400;
 
@@ -67,7 +66,7 @@ class NotepadMain extends Component<Props> {
         focusedVarNo: undefined
       },
       openRoutesDrawer: false,
-      delimiter: ' ',
+      delimiter: '\t',
       functionsDef: {}
     };
 
@@ -84,8 +83,14 @@ class NotepadMain extends Component<Props> {
 
     ipcRenderer.on(FILE_OPENED, (event, data) => {
       console.log(data);
-      if (data.text) this.setState({ text: data.text });
-      else if (data.functionsTemplate) {
+      if (typeof data.text !== "undefined"){
+        console.log("Setting text")
+        this.setState({ text: data.text });
+        if(typeof data.functionsTemplate !== "undefined") {
+          this.justLoadFunctions(data.functionsTemplate)
+        }
+      } 
+      else if ( typeof data.functionsTemplate !== "undefined") {
         this.loadTemplate(data.functionsTemplate);
       }
     });
@@ -116,7 +121,7 @@ class NotepadMain extends Component<Props> {
   componentWillUnmount = () => {
     console.log('unmount');
     const data = {
-      text: this.state.currentTextValue
+      text: this.state.text
     };
     ipcRenderer.send(NOTEPAD_UNMOUNT, data);
   };
@@ -130,10 +135,13 @@ class NotepadMain extends Component<Props> {
     ipcRenderer.send(SEND_DATA_TO_SAVE, data);
   };
 
+  justLoadFunctions = funs => {
+    const functionsDefToState = { functions: funs };
+    this.setState({ functionsDef: functionsDefToState });
+  }
+
   // it should able to work with a data from TEMPLATE_OPEN and FILE_OPENED
   loadTemplate = data => {
-    // console.log('heeee', data);
-    // const templateFunctions = data.functionsTemplate;
     const functionsDefToState = { functions: data };
     this.setState({ functionsDef: functionsDefToState });
     let textValue = '';
@@ -223,7 +231,6 @@ class NotepadMain extends Component<Props> {
   };
 
   processChange = event => {
-    // console.log(this.state.delimiter.toString());
     const currentValue = event.target.value;
     if (!currentValue || !this.state.functionsDef) return;
 
@@ -243,7 +250,6 @@ class NotepadMain extends Component<Props> {
 
       if (line.startsWith('*')) {
         const functionText = line.replace('*', '');
-
         const funSearch = this.findFun(functionText);
         const foundDefinition = this.state.functionsDef.functions.find(
           funSearch
@@ -261,14 +267,31 @@ class NotepadMain extends Component<Props> {
             variables: []
           };
 
-          if (event.target.selectionStart >= currentLineStart) {
-            currentFocused = tempFocused;
-          }
+        } else {
+          tempFocused = {
+            text: functionText,
+            definition: {},
+            focusedVarNo: null,
+            focusedVarLineNo: null,
+            functionEnd: lineEnd,
+            functionStart: currentLineStart,
+            valuesOfLine: [],
+            variables: []
+          };
+        }
+        if (event.target.selectionStart >= currentLineStart) {
+          currentFocused = tempFocused;
         }
         varCounter = 0;
         lineOfVars = 0;
       } else {
-        const splittedByDelimiter = line.split(this.state.delimiter);
+        let splittedByDelimiter = []
+        
+        if(this.state.delimiter === "WHITESPACE") {
+          splittedByDelimiter = line.split(/(\s+)/).filter( e => e.trim().length > 0 );
+        } else {
+          splittedByDelimiter = line.split(this.state.delimiter)
+        }
         let tempLen = currentLineStart;
 
         splittedByDelimiter.forEach(elem => {
@@ -290,7 +313,7 @@ class NotepadMain extends Component<Props> {
       currentLineStart += line.length + 1; // +1 is a \n
     });
 
-        this.setState({
+    this.setState({
       focusedFunction: currentFocused
     });
   };

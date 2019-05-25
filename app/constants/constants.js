@@ -18,25 +18,14 @@ module.exports = {
 
   DELIMITERS: [
     {
-      value: 'SPACE',
-      realValue: ' ',
-      label: 'Space'
-    },
-    {
-      value: 'TAB',
-      realValue: '\t',
-      label: 'Tab'
+      value: 'WHITESPACE',
+      realValue: 'WHITESPACE',
+      label: 'Whitespace'
     },
     {
       value: ';',
       realValue: ';',
       label: 'Semicolon'
-    },
-    {
-      value: '(s+)',
-      realValue: '(s+)',
-      label: 'Whitespace',
-      isRegExp: true
     }
   ]
 };

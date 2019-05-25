@@ -89,8 +89,8 @@ class AppBarDefem extends Component<Props> {
     super(props);
     this.state = {
       openSettings: false,
-      delimiterTag: 'SPACE',
-      delimiterLabel: 'Space',
+      delimiterTag: 'WHITESPACE',
+      delimiterLabel: 'Whitespace',
       searchValue: ''
     };
   }
@@ -207,7 +207,7 @@ class AppBarDefem extends Component<Props> {
           <DialogTitle id="alert-dialog-slide-title">Settings</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
-              Choose your variable delimiter
+              Choose the variables delimiter
             </DialogContentText>
             <TextField
               id="outlined-select-delimiter"

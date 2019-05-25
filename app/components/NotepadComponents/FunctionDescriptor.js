@@ -50,7 +50,7 @@ class FunctionDescriptor extends React.Component {
     let enumerateLines = 0;
 
     const variables = [];
-    if(expanded){
+    if(expanded && typeof definition.variables !== "undefined"){
     definition.variables.forEach(arrOfVariables => {
       arrOfVariables.forEach(variable => {
         variables.push(
@@ -85,7 +85,7 @@ class FunctionDescriptor extends React.Component {
                   variant="subtitle2"
                   color='error'
                   gutterBottom
-                >{`ZA DUŻO ZMIENNYCH`}</Typography>
+                >ZA DUŻO ZMIENNYCH</Typography>
                 {`Została wprowadzona za duża ilość zmiennych dla zadanej funkcji. Usuń wartości które nie zostały zadeklarowe w definicji.`}
               </Typography>
             </ListItemText>
@@ -104,6 +104,23 @@ class FunctionDescriptor extends React.Component {
       enumerateLines += 1;
       // todo: if enumerateVars or lines are greater than variable matrix dimmensions, throw error on GUI
     });
+  } else {
+    variables.push(
+      <ListItem key="function-list-item-variable-undef">
+        <ListItemText disableTypography>
+          <Typography
+            gutterBottom
+                >
+            <Typography
+              component="span"
+              variant="subtitle2"
+              gutterBottom
+            >Ta funkcja nie została zdefiniowana w szablonie</Typography>
+            {"Zdefiniuj funkcję i jej zmienne w edytorze szablonów"}
+          </Typography>
+        </ListItemText>
+      </ListItem>
+    );
   }
 
     return (
