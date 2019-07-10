@@ -66,7 +66,7 @@ class NotepadMain extends Component<Props> {
         focusedVarNo: undefined
       },
       openRoutesDrawer: false,
-      delimiter: '\t',
+      delimiter: 'WHITESPACE',
       functionsDef: {}
     };
 
@@ -83,14 +83,13 @@ class NotepadMain extends Component<Props> {
 
     ipcRenderer.on(FILE_OPENED, (event, data) => {
       console.log(data);
-      if (typeof data.text !== "undefined"){
-        console.log("Setting text")
+      if (typeof data.text !== 'undefined' && data.text !== '') {
+        console.log('Setting text');
         this.setState({ text: data.text });
-        if(typeof data.functionsTemplate !== "undefined") {
-          this.justLoadFunctions(data.functionsTemplate)
+        if (typeof data.functionsTemplate !== 'undefined') {
+          this.justLoadFunctions(data.functionsTemplate);
         }
-      } 
-      else if ( typeof data.functionsTemplate !== "undefined") {
+      } else if (typeof data.functionsTemplate !== 'undefined') {
         this.loadTemplate(data.functionsTemplate);
       }
     });
@@ -101,7 +100,7 @@ class NotepadMain extends Component<Props> {
 
     ipcRenderer.on(TEMPLATE_OPENED, (event, data) => {
       console.log(data);
-      if (data.template) {
+      if (typeof data.template !== 'undefined') {
         const { template } = data;
 
         console.log(template);
@@ -138,7 +137,7 @@ class NotepadMain extends Component<Props> {
   justLoadFunctions = funs => {
     const functionsDefToState = { functions: funs };
     this.setState({ functionsDef: functionsDefToState });
-  }
+  };
 
   // it should able to work with a data from TEMPLATE_OPEN and FILE_OPENED
   loadTemplate = data => {
@@ -266,7 +265,6 @@ class NotepadMain extends Component<Props> {
             valuesOfLine: [],
             variables: []
           };
-
         } else {
           tempFocused = {
             text: functionText,
@@ -285,12 +283,14 @@ class NotepadMain extends Component<Props> {
         varCounter = 0;
         lineOfVars = 0;
       } else {
-        let splittedByDelimiter = []
-        
-        if(this.state.delimiter === "WHITESPACE") {
-          splittedByDelimiter = line.split(/(\s+)/).filter( e => e.trim().length > 0 );
+        let splittedByDelimiter = [];
+
+        if (this.state.delimiter === 'WHITESPACE') {
+          splittedByDelimiter = line
+            .split(/(\s+)/)
+            .filter(e => e.trim().length > 0);
         } else {
-          splittedByDelimiter = line.split(this.state.delimiter)
+          splittedByDelimiter = line.split(this.state.delimiter);
         }
         let tempLen = currentLineStart;
 
@@ -305,7 +305,7 @@ class NotepadMain extends Component<Props> {
           }
           tempLen += elem.length + 1; // +1 for delimiter
         });
-     
+
         lineOfVars += 1;
         varCounter = 0;
       }

@@ -14,7 +14,6 @@ import {
   REQUEST_TEMPLATE_TO_SAVE,
   SEND_DATA_TO_SAVE,
   EXPORT_TEMPLATE_TO_RENDER,
-  FILE_OPENED,
   STORE_TEMPLATE,
   RESTORE_TEMPLATE,
   CATCH_ON_TEMPLATE
@@ -76,10 +75,6 @@ class TemplateEditor extends Component<Props> {
       }
     });
 
-    ipcRenderer.on(FILE_OPENED, (event, data) => {
-      const { template } = data.functionsTemplate;
-    });
-
     ipcRenderer.on(REQUEST_TEMPLATE_TO_SAVE, (event, data) => {
       const path = data;
       this.prepareAndSendTemplate(path);
@@ -121,6 +116,7 @@ class TemplateEditor extends Component<Props> {
 
   handleExportClick = () => {
     const dataToExport = this.state.functions;
+    dataToExport.force = true;
 
     ipcRenderer.send(EXPORT_TEMPLATE_TO_RENDER, dataToExport);
   };
